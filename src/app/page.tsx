@@ -1,5 +1,6 @@
 import { fetchApi } from "@/lib/api/client";
 import { Suspense } from "react";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -23,22 +24,24 @@ async function ProductList() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
       {items.map((item) => (
-        <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-          <div className="aspect-square bg-muted flex items-center justify-center">
-            {item.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
-            ) : (
-              <span className="text-muted-foreground">No Image</span>
-            )}
-          </div>
-          <CardHeader>
-            <CardTitle className="line-clamp-1">{item.title}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="font-semibold text-lg text-primary">${item.price}</p>
-          </CardContent>
-        </Card>
+        <Link key={item.id} href={`/products/${item.id}`} className="group block">
+          <Card className="overflow-hidden h-full group-hover:shadow-lg transition-all duration-300 border border-border/50 group-hover:border-border">
+            <div className="aspect-square bg-muted flex items-center justify-center relative overflow-hidden">
+              {item.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              ) : (
+                <span className="text-muted-foreground">No Image</span>
+              )}
+            </div>
+            <CardHeader>
+              <CardTitle className="line-clamp-1 group-hover:text-primary transition-colors">{item.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="font-bold text-xl text-primary">${item.price}</p>
+            </CardContent>
+          </Card>
+        </Link>
       ))}
     </div>
   );

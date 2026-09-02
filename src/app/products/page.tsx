@@ -1,5 +1,6 @@
 import { fetchFromAPI } from "@/lib/api";
 import { Item } from "@/lib/types";
+import { toAbsoluteUrl } from "@/lib/media";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingBag, Search, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
@@ -79,7 +80,7 @@ export default async function ProductsPage() {
                 <div className="relative aspect-[4/5] bg-gray-100 overflow-hidden">
                   {product.images && product.images.length > 0 ? (
                     <img
-                      src={product.images[0].image}
+                      src={toAbsoluteUrl(product.images[0].image)}
                       alt={product.title}
                       className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
                     />

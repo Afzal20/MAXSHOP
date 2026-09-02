@@ -1,5 +1,6 @@
 import { fetchFromAPI } from "@/lib/api";
 import { Category } from "@/lib/types";
+import { toAbsoluteUrl } from "@/lib/media";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { Layers } from "lucide-react";
@@ -46,7 +47,7 @@ export default async function CategoriesPage() {
                 {category.image ? (
                   <div className="absolute inset-0 z-0">
                     <img
-                      src={category.image}
+                      src={toAbsoluteUrl(category.image)}
                       alt={category.name}
                       className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                     />

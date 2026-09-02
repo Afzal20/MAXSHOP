@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+import { API_URL, setAuthCookies } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
@@ -22,29 +22,14 @@ export async function POST(request: Request) {
       );
     }
 
-    const response = NextResponse.json(data);
+    const accessToken = data.access_token || data.access;
+    const refreshToken = data.refresh_token || data.refresh;
 
-    if (data.access_token) {
-      response.cookies.set("access_token", data.access_token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 60 * 60 * 24, // 1 day
-      });
+    if (accessToken) {
+      await setAuthCookies(accessToken, refreshToken);
     }
 
-    if (data.refresh_token) {
-      response.cookies.set("refresh_token", data.refresh_token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7, // 7 days
-      });
-    }
-
-    return response;
+    return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json(
       { error: "An unexpected error occurred" },

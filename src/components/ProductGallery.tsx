@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toAbsoluteUrl } from "@/lib/media";
 
 type ImageType = {
   id: number;
@@ -23,7 +24,7 @@ export function ProductGallery({ images, title, discount_price }: Props) {
       <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden relative">
         {mainImage ? (
           <img
-            src={mainImage}
+            src={toAbsoluteUrl(mainImage)}
             alt={title}
             className="w-full h-full object-cover transition-all duration-300"
           />
@@ -50,7 +51,7 @@ export function ProductGallery({ images, title, discount_price }: Props) {
                 index === mainImageIndex ? 'border-primary' : 'border-transparent hover:border-primary/50'
               }`}
             >
-              <img src={img.image} alt={`thumbnail-${index}`} className="w-full h-full object-cover" />
+              <img src={toAbsoluteUrl(img.image)} alt={`thumbnail-${index}`} className="w-full h-full object-cover" />
             </div>
           ))}
         </div>

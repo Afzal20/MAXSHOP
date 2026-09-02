@@ -1,69 +1,28 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+import { apiFetch } from "@/lib/auth";
 
 export async function GET() {
-  try {
-    const accessToken = (await cookies()).get("access_token")?.value;
+  const { ok, status, data } = await apiFetch("/shop/carts/");
 
-    if (!accessToken) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const res = await fetch(`${API_URL}/shop/carts/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Cookie": `access_token=${accessToken}`,
-      },
-    });
-
-    if (!res.ok) {
-      const data = await res.json();
-      return NextResponse.json(data, { status: res.status });
-    }
-
-    const data = await res.json();
-    return NextResponse.json(data);
-  } catch (error) {
+  if (!ok) {
     return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
+      data && typeof data === "object"
+        ? data
+        : { error: status === 401 ? "Unauthorized" : "Failed to fetch cart" },
+      { status }
     );
   }
+
+  return NextResponse.json(data);
 }
 
 export async function POST(request: Request) {
-  try {
-    const accessToken = (await cookies()).get("access_token")?.value;
+  const body = await request.json().catch(() => ({}));
 
-    if (!accessToken) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const { ok, status, data } = await apiFetch("/shop/carts/", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
 
-    const body = await request.json();
-
-    const res = await fetch(`${API_URL}/shop/carts/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Cookie": `access_token=${accessToken}`,
-      },
-      body: JSON.stringify(body),
-    });
-
-    const data = await res.json();
-    
-    if (!res.ok) {
-      return NextResponse.json(data, { status: res.status });
-    }
-
-    return NextResponse.json(data, { status: 201 });
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json(data ?? {}, { status: ok ? 201 : status });
 }

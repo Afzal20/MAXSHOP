@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2, ArrowRight, Minus, Plus, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { toAbsoluteUrl } from "@/lib/media";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState<any[]>([]);
@@ -114,7 +115,14 @@ export default function CartPage() {
                   <div key={item.id} className="bg-white p-6 rounded-3xl shadow-sm flex flex-col sm:flex-row gap-6 items-center sm:items-start relative">
                     <div className="w-32 h-32 bg-gray-100 rounded-2xl flex-shrink-0 overflow-hidden">
                       {product.images && product.images.length > 0 ? (
-                        <img src={product.images[0].image || product.images[0]} alt={product.title} className="w-full h-full object-cover" />
+                        <img
+                          src={toAbsoluteUrl(
+                            (product.images[0] as any)?.image ||
+                              (typeof product.images[0] === "string" ? product.images[0] : undefined)
+                          )}
+                          alt={product.title}
+                          className="w-full h-full object-cover"
+                        />
                       ) : (
                         <div className="w-full h-full bg-gray-200" />
                       )}

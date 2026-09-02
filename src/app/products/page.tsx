@@ -1,6 +1,5 @@
 import { fetchFromAPI } from "@/lib/api";
 import { Item } from "@/lib/types";
-import { Navbar } from "@/components/Navbar";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingBag, Search, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
@@ -51,7 +50,6 @@ export default async function ProductsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navbar />
 
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">

@@ -3,8 +3,16 @@
 import Link from "next/link";
 import { ShoppingCart, User, Search } from "lucide-react";
 import { Button } from "./ui/button";
+import { usePathname } from "next/navigation";
 
 export function Navbar() {
+  const pathname = usePathname();
+  const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-otp"];
+  
+  if (authRoutes.includes(pathname)) {
+    return null;
+  }
+
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">

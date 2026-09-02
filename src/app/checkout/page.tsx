@@ -1,6 +1,5 @@
 "use client";
 
-import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,13 +9,11 @@ import { CreditCard, Lock } from "lucide-react";
 export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navbar />
-
       <main className="flex-grow container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold tracking-tight mb-8">Checkout</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
+
           <div className="lg:col-span-2 space-y-8">
             {/* Shipping Info */}
             <Card className="border-none shadow-sm rounded-3xl overflow-hidden">
@@ -82,7 +79,7 @@ export default function CheckoutPage() {
           {/* Checkout Summary */}
           <div className="bg-white p-8 rounded-3xl shadow-sm h-fit sticky top-24 border border-gray-100">
             <h2 className="text-xl font-bold mb-6">Order Total</h2>
-            
+
             <div className="space-y-4 text-sm mb-6 pb-6 border-b border-gray-100">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Premium Leather Jacket</span>
@@ -115,7 +112,7 @@ export default function CheckoutPage() {
             <Button size="lg" className="w-full rounded-full h-14 text-base font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 transition-all">
               Pay $614.98
             </Button>
-            
+
             <p className="text-xs text-center text-muted-foreground mt-4 flex items-center justify-center gap-1">
               <Lock className="h-3 w-3" /> Secure encrypted payment
             </p>

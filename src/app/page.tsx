@@ -1,10 +1,9 @@
 import { fetchFromAPI } from "@/lib/api";
 import { Item, Category } from "@/lib/types";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ShoppingBag } from "lucide-react";
 import Link from "next/link";
-import { Navbar } from "@/components/Navbar";
 
 export const revalidate = 60; // Revalidate every minute for ISR
 
@@ -15,7 +14,7 @@ export default async function Home() {
   try {
     const productsRes = await fetchFromAPI("/shop/items/");
     products = productsRes.results || productsRes || [];
-    
+
     const categoriesRes = await fetchFromAPI("/shop/categories/");
     categories = categoriesRes.results || categoriesRes || [];
   } catch (error) {
@@ -46,15 +45,13 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navbar />
-
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="relative h-[80vh] min-h-[600px] w-full bg-slate-900 flex items-center justify-center overflow-hidden">
           {/* Abstract gradient background */}
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 opacity-90" />
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay opacity-30" />
-          
+
           <div className="relative z-10 container mx-auto px-4 text-center">
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter text-white mb-6 drop-shadow-lg">
               Elevate Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Style</span>
@@ -91,8 +88,8 @@ export default async function Home() {
                 <Link href={`/products/${product.id}`} className="flex-grow">
                   <div className="relative aspect-[4/5] bg-gray-100 overflow-hidden">
                     {product.images && product.images.length > 0 ? (
-                      <img 
-                        src={product.images[0].image} 
+                      <img
+                        src={product.images[0].image}
                         alt={product.title}
                         className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
                       />

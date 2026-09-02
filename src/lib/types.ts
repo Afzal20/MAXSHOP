@@ -1,0 +1,63 @@
+export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  image?: string;
+  description?: string;
+}
+
+export interface ItemImage {
+  id: number;
+  image: string;
+}
+
+export interface ItemSize {
+  id: number;
+  size: { id: number; name: string };
+  stock: number;
+}
+
+export interface ItemColor {
+  id: number;
+  color: { id: number; name: string; hex_code?: string };
+}
+
+export interface Item {
+  id: number;
+  title: string;
+  slug: string;
+  price: string;
+  discount_price?: string;
+  category: Category;
+  label?: string;
+  description: string;
+  images: ItemImage[];
+  sizes: ItemSize[];
+  colors: ItemColor[];
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface HeroSection {
+  id: number;
+  title: string;
+  subtitle?: string;
+  image: string;
+  button_text?: string;
+  button_link?: string;
+}
+
+export interface Slider {
+  id: number;
+  image: string;
+  title?: string;
+  url?: string;
+}
+
+export interface User {
+  id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone_number?: string;
+}

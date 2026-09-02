@@ -1,54 +1,49 @@
-import Link from 'next/link';
-import { ShoppingCart, User } from 'lucide-react';
-import { fetchApi } from '@/lib/api/client';
-import { Button } from '@/components/ui/button';
+"use client";
 
-interface Category {
-  id: number;
-  title: string;
-  slug: string;
-}
+import Link from "next/link";
+import { ShoppingCart, User, Search } from "lucide-react";
+import { Button } from "./ui/button";
 
-export async function Navbar() {
-  let categories: Category[] = [];
-  try {
-    categories = await fetchApi<Category[]>('/shop/categories/', { next: { revalidate: 3600 } });
-  } catch (e) {
-    console.error('Failed to fetch categories', e);
-  }
-
+export function Navbar() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <div className="flex items-center gap-6 md:gap-10">
+        <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="inline-block font-extrabold text-2xl tracking-tight text-primary">Marketplace</span>
+            <span className="text-xl font-bold tracking-tighter">Luxe<span className="text-primary">Store</span></span>
           </Link>
-          {categories.length > 0 && (
-            <nav className="hidden md:flex gap-6">
-              {categories.slice(0, 5).map((category) => (
-                <Link
-                  key={category.id}
-                  href={`/products?category=${category.slug}`}
-                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {category.title}
-                </Link>
-              ))}
-            </nav>
-          )}
+          <div className="hidden md:flex gap-6 text-sm font-medium text-muted-foreground">
+            <Link href="/products" className="hover:text-primary transition-colors">All Products</Link>
+            <Link href="/categories" className="hover:text-primary transition-colors">Categories</Link>
+            <Link href="/about" className="hover:text-primary transition-colors">About Us</Link>
+          </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <User className="h-5 w-5" />
-            <span className="sr-only">Account</span>
-          </Button>
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ShoppingCart className="h-5 w-5" />
-            <span className="sr-only">Cart</span>
-          </Button>
+
+        <div className="flex items-center gap-4">
+          <div className="hidden sm:flex relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <input
+              type="search"
+              placeholder="Search products..."
+              className="h-9 w-64 rounded-md border border-input bg-transparent px-9 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            />
+          </div>
+          
+          <Link href="/cart">
+            <Button variant="ghost" size="icon" className="relative">
+              <ShoppingCart className="h-5 w-5" />
+              <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-primary" />
+              <span className="sr-only">Cart</span>
+            </Button>
+          </Link>
+          <Link href="/login">
+            <Button variant="ghost" size="icon">
+              <User className="h-5 w-5" />
+              <span className="sr-only">Account</span>
+            </Button>
+          </Link>
         </div>
       </div>
-    </header>
+    </nav>
   );
 }

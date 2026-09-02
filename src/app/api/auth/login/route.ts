@@ -22,11 +22,14 @@ export async function POST(request: Request) {
       return NextResponse.json(data, { status: response.status });
     }
 
-    // Usually DRF SimpleJWT returns { access, refresh }
-    if (data.access) {
+    // Usually DRF SimpleJWT returns { access, refresh }, but our backend returns { access_token, refresh_token }
+    const accessToken = data.access || data.access_token;
+    const refreshToken = data.refresh || data.refresh_token;
+
+    if (accessToken) {
       (await cookies()).set({
         name: "access_token",
-        value: data.access,
+        value: accessToken,
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -35,10 +38,10 @@ export async function POST(request: Request) {
       });
     }
 
-    if (data.refresh) {
+    if (refreshToken) {
       (await cookies()).set({
         name: "refresh_token",
-        value: data.refresh,
+        value: refreshToken,
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",

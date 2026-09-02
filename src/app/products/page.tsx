@@ -22,27 +22,27 @@ export default async function ProductsPage() {
   if (products.length === 0) {
     products = [
       {
-        id: 1, title: "Premium Leather Jacket", slug: "premium-leather-jacket", price: "299.99", discount_price: "249.99", description: "", images: [], sizes: [], colors: [],
+        id: 1, title: "Premium Leather Jacket", slug: "premium-leather-jacket", price: "299.99", discount_price: "249.99", description: "", images: [], item_size: [{ id: 1, size: { id: 1, name: "M" }, stock: 10, price_for_this_size: 0, item: 1 }] as any, item_color: [{ id: 1, color: { id: 1, name: "Black", hex_code: "#000000" }, item: 1 }] as any,
         category: { id: 1, name: "Clothing", slug: "clothing" }
       },
       {
-        id: 2, title: "Minimalist Watch", slug: "minimalist-watch", price: "199.99", description: "", images: [], sizes: [], colors: [],
+        id: 2, title: "Minimalist Watch", slug: "minimalist-watch", price: "199.99", description: "", images: [], item_size: [], item_color: [],
         category: { id: 2, name: "Accessories", slug: "accessories" }
       },
       {
-        id: 3, title: "Sony WH-1000XM5", slug: "sony-wh", price: "349.99", description: "", images: [], sizes: [], colors: [],
+        id: 3, title: "Sony WH-1000XM5", slug: "sony-wh", price: "349.99", description: "", images: [], item_size: [], item_color: [],
         category: { id: 3, name: "Electronics", slug: "electronics" }
       },
       {
-        id: 4, title: "Designer Sunglasses", slug: "designer-sunglasses", price: "159.99", description: "", images: [], sizes: [], colors: [],
+        id: 4, title: "Designer Sunglasses", slug: "designer-sunglasses", price: "159.99", description: "", images: [], item_size: [], item_color: [],
         category: { id: 2, name: "Accessories", slug: "accessories" }
       },
       {
-        id: 5, title: "Classic White Sneakers", slug: "classic-white-sneakers", price: "129.99", description: "", images: [], sizes: [], colors: [],
+        id: 5, title: "Classic White Sneakers", slug: "classic-white-sneakers", price: "129.99", description: "", images: [], item_size: [], item_color: [],
         category: { id: 4, name: "Footwear", slug: "footwear" }
       },
       {
-        id: 6, title: "Wireless Earbuds", slug: "wireless-earbuds", price: "199.99", discount_price: "149.99", description: "", images: [], sizes: [], colors: [],
+        id: 6, title: "Wireless Earbuds", slug: "wireless-earbuds", price: "199.99", discount_price: "149.99", description: "", images: [], item_size: [], item_color: [],
         category: { id: 3, name: "Electronics", slug: "electronics" }
       }
     ];
@@ -96,7 +96,7 @@ export default async function ProductsPage() {
                 </div>
                 <CardContent className="p-5">
                   <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wider font-semibold">
-                    {product.category?.name || "Uncategorized"}
+                    {typeof product.category === 'object' ? (product.category as any)?.name : 'Category'}
                   </p>
                   <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-primary transition-colors">
                     {product.title}

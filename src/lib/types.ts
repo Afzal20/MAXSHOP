@@ -28,12 +28,12 @@ export interface Item {
   slug: string;
   price: string;
   discount_price?: string;
-  category: Category;
+  category: number | Category;
   label?: string;
   description: string;
   images: ItemImage[];
-  sizes: ItemSize[];
-  colors: ItemColor[];
+  item_size: ItemSize[];
+  item_color: ItemColor[];
   created_at?: string;
   updated_at?: string;
 }

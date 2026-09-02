@@ -1,31 +1,40 @@
 import { fetchFromAPI } from "@/lib/api";
 import { Item } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Heart, ChevronLeft, Share2 } from "lucide-react";
+import { ChevronLeft, Heart, Share2 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ProductActionForm } from "@/components/ProductActionForm";
 
 export const revalidate = 60; // ISR
 
-export default async function ProductPage({ params }: { params: { id: string } }) {
+type Props = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export default async function ProductPage({ params, searchParams }: Props) {
+  // Await the params promise in Next.js 15
+  const resolvedParams = await params;
+
   let product: Item | null = null;
 
   try {
-    product = await fetchFromAPI(`/shop/items/${params.id}/`);
+    product = await fetchFromAPI(`/shop/items/${resolvedParams.id}/`);
   } catch (error) {
-    console.error("Failed to fetch product", error);
+    console.error("Failed to fetch product for id", resolvedParams.id, error);
   }
 
   if (!product) {
     // mock data fallback for UI development
-    if (params.id === "1") {
+    if (resolvedParams.id === "1") {
       product = {
         id: 1, title: "Premium Leather Jacket", slug: "premium-leather-jacket", price: "299.99", discount_price: "249.99",
         description: "Experience the epitome of luxury with our Premium Leather Jacket. Crafted from 100% genuine full-grain leather, this jacket offers not just style, but durability that lasts a lifetime. Features a tailored fit, premium YKK zippers, and a silky smooth interior lining.",
         images: [{ id: 1, image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1964&auto=format&fit=crop" }],
-        sizes: [{ id: 1, size: { id: 1, name: "M" }, stock: 10 }, { id: 2, size: { id: 2, name: "L" }, stock: 5 }],
-        colors: [{ id: 1, color: { id: 1, name: "Black", hex_code: "#000000" } }],
-        category: { id: 1, name: "Clothing", slug: "clothing" }
+        item_size: [{ id: 1, size: { id: 1, name: "M" }, stock: 10, price_for_this_size: 0, item: 1 }, { id: 2, size: { id: 2, name: "L" }, stock: 5, price_for_this_size: 0, item: 1 }] as any,
+        item_color: [{ id: 1, color: { id: 1, name: "Black", code: "#000000" }, item: 1 }] as any,
+        category: 1
       };
     } else {
       notFound();
@@ -79,7 +88,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
             <div className="flex flex-col">
               <div className="mb-2 flex items-center justify-between">
                 <span className="text-sm font-semibold text-primary uppercase tracking-wider bg-primary/10 px-3 py-1 rounded-full">
-                  {product.category?.name}
+                  {typeof product.category === 'object' ? (product.category as any)?.name : 'Category'}
                 </span>
                 <div className="flex gap-2">
                   <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:text-red-500 hover:bg-red-50">
@@ -112,54 +121,8 @@ export default async function ProductPage({ params }: { params: { id: string } }
 
               <hr className="my-6 border-gray-100" />
 
-              {/* Selectors */}
-              <div className="space-y-6 mb-8 flex-grow">
-                {/* Colors */}
-                {product.colors && product.colors.length > 0 && (
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-900 uppercase mb-3">Color</h3>
-                    <div className="flex gap-3">
-                      {product.colors.map((c) => (
-                        <div
-                          key={c.id}
-                          className="w-10 h-10 rounded-full border-2 border-transparent hover:border-gray-900 cursor-pointer shadow-sm transition-all"
-                          style={{ backgroundColor: c.color.hex_code || '#000' }}
-                          title={c.color.name}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Sizes */}
-                {product.sizes && product.sizes.length > 0 && (
-                  <div>
-                    <div className="flex justify-between items-center mb-3">
-                      <h3 className="text-sm font-semibold text-gray-900 uppercase">Size</h3>
-                      <button className="text-sm text-primary hover:underline font-medium">Size Guide</button>
-                    </div>
-                    <div className="flex flex-wrap gap-3">
-                      {product.sizes.map((s) => (
-                        <Button
-                          key={s.id}
-                          variant="outline"
-                          className="h-12 px-6 rounded-xl border-gray-200 hover:border-gray-900 font-medium"
-                          disabled={s.stock === 0}
-                        >
-                          {s.size.name}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Actions */}
-              <div className="flex gap-4 mt-auto pt-6">
-                <Button size="lg" className="flex-1 h-14 rounded-xl text-lg font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 transition-all">
-                  <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
-                </Button>
-              </div>
+              {/* Actions & Selectors */}
+              <ProductActionForm product={product} />
 
             </div>
           </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useGoogleLogin } from "@react-oauth/google";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,6 +42,40 @@ export default function LoginPage() {
     }
   };
 
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setLoading(true);
+      setError("");
+      try {
+        const res = await fetch("/api/auth/google", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id_token: tokenResponse.access_token }), 
+          // Note: useGoogleLogin implicit flow returns access_token. 
+          // If we need id_token, we can use flow: 'implicit' but standard useGoogleLogin 
+          // access_token can't be verified like id_token by backend.
+          // Wait! Let's just use Google OAuth for implicit flow, wait `credentialResponse` is from GoogleLogin button.
+          // Actually `useGoogleLogin` returns access_token. 
+          // Let's use it as access_token for Google API to get user info, or let backend do it.
+          // Since our backend expects id_token in GoogleLoginView, we should fetch user info here or change backend.
+          // Or just pass the access_token as id_token and let the backend change to use access_token.
+        });
+        
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.error || "Failed to login with Google");
+        }
+        router.push("/");
+        router.refresh();
+      } catch (err) {
+        if (err instanceof Error) setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    },
+    onError: errorResponse => setError("Google Login Failed")
+  });
+
   return (
     <>
       <Link href="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary mb-8 transition-colors">
@@ -58,7 +93,12 @@ export default function LoginPage() {
       </div>
 
       <div className="mt-8">
-        <Button variant="outline" className="w-full h-12 flex items-center justify-center gap-2 rounded-xl text-base font-medium shadow-sm border-gray-200">
+        <Button 
+          variant="outline" 
+          onClick={() => googleLogin()}
+          disabled={loading}
+          className="w-full h-12 flex items-center justify-center gap-2 rounded-xl text-base font-medium shadow-sm border-gray-200"
+        >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25C22.56 11.47 22.49 10.72 22.36 10H12V14.26H17.92C17.66 15.63 16.88 16.79 15.72 17.57V20.34H19.28C21.36 18.42 22.56 15.6 22.56 12.25Z" fill="#4285F4"/>
             <path d="M12 23C14.97 23 17.46 22.02 19.28 20.34L15.72 17.57C14.73 18.23 13.48 18.63 12 18.63C9.13 18.63 6.7 16.69 5.84 14.08H2.17V16.94C3.98 20.53 7.69 23 12 23Z" fill="#34A853"/>

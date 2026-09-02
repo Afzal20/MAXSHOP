@@ -15,7 +15,7 @@ export async function GET() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`,
+        "Cookie": `access_token=${accessToken}`,
       },
     });
 
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`,
+        "Cookie": `access_token=${accessToken}`,
       },
       body: JSON.stringify(body),
     });

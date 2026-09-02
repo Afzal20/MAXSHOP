@@ -24,19 +24,17 @@ export function ProductActionForm({ product }: { product: Item }) {
     setSuccess(false);
 
     try {
-      const payload = {
-        item: product.id,
-        item_color_code: selectedColor || "",
-        item_size: selectedSize || "",
-        quantity: 1, // Defaulting to 1 for now
-      };
-
       const res = await fetch("/api/cart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          item: product.id,
+          quantity: 1,
+          item_color_code: selectedColor || "N/A",
+          item_size: selectedSize || "N/A",
+        }),
       });
 
       const data = await res.json();

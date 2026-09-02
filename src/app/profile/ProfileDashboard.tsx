@@ -32,86 +32,81 @@ export function ProfileDashboard({ initialProfile, initialOrders, initialAddress
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-8">
+    <div className="flex flex-col md:flex-row gap-6">
       {/* Sidebar Navigation */}
       <aside className="w-full md:w-64 shrink-0">
-        <nav className="flex flex-col gap-2">
-          <Button 
-            variant={activeTab === "profile" ? "default" : "ghost"} 
-            className="justify-start gap-3"
+        <nav className="flex flex-col border border-[#e5e5e5] bg-white">
+          <button 
+            className={`flex items-center gap-3 px-6 py-4 text-[13px] font-bold uppercase transition-colors border-b border-[#e5e5e5] ${activeTab === "profile" ? "text-white bg-[#dc3545]" : "text-[#333333] hover:text-[#dc3545]"}`}
             onClick={() => setActiveTab("profile")}
           >
             <User className="h-4 w-4" /> Account Details
-          </Button>
-          <Button 
-            variant={activeTab === "orders" ? "default" : "ghost"} 
-            className="justify-start gap-3"
+          </button>
+          <button 
+            className={`flex items-center gap-3 px-6 py-4 text-[13px] font-bold uppercase transition-colors border-b border-[#e5e5e5] ${activeTab === "orders" ? "text-white bg-[#dc3545]" : "text-[#333333] hover:text-[#dc3545]"}`}
             onClick={() => setActiveTab("orders")}
           >
             <Package className="h-4 w-4" /> Order History
-          </Button>
-          <Button 
-            variant={activeTab === "addresses" ? "default" : "ghost"} 
-            className="justify-start gap-3"
+          </button>
+          <button 
+            className={`flex items-center gap-3 px-6 py-4 text-[13px] font-bold uppercase transition-colors border-b border-[#e5e5e5] ${activeTab === "addresses" ? "text-white bg-[#dc3545]" : "text-[#333333] hover:text-[#dc3545]"}`}
             onClick={() => setActiveTab("addresses")}
           >
             <MapPin className="h-4 w-4" /> Saved Addresses
-          </Button>
-          <hr className="my-2" />
-          <Button 
-            variant="ghost" 
-            className="justify-start gap-3 text-red-500 hover:text-red-600 hover:bg-red-50"
+          </button>
+          <button 
+            className="flex items-center gap-3 px-6 py-4 text-[13px] font-bold uppercase transition-colors text-[#333333] hover:text-[#dc3545]"
             onClick={handleLogout}
             disabled={isLoggingOut}
           >
             <LogOut className="h-4 w-4" /> {isLoggingOut ? "Logging out..." : "Log Out"}
-          </Button>
+          </button>
         </nav>
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100">
+      <main className="flex-1 bg-white p-8 border border-[#e5e5e5]">
         {activeTab === "profile" && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-semibold">Account Details</h2>
+            <h2 className="text-[16px] font-bold uppercase text-[#333333] border-b border-[#e5e5e5] pb-4">Account Details</h2>
             {initialProfile ? (
-              <div className="grid gap-4">
-                <p><strong>First Name:</strong> {initialProfile.user?.first_name || 'N/A'}</p>
-                <p><strong>Last Name:</strong> {initialProfile.user?.last_name || 'N/A'}</p>
-                <p><strong>Email:</strong> {initialProfile.user?.email}</p>
-                <p><strong>Phone:</strong> {initialProfile.phone_number || 'Not provided'}</p>
+              <div className="grid gap-4 text-[14px] text-[#666666]">
+                <p><strong className="text-[#333333] uppercase text-[12px]">First Name:</strong> {initialProfile.user?.first_name || 'N/A'}</p>
+                <p><strong className="text-[#333333] uppercase text-[12px]">Last Name:</strong> {initialProfile.user?.last_name || 'N/A'}</p>
+                <p><strong className="text-[#333333] uppercase text-[12px]">Email:</strong> {initialProfile.user?.email}</p>
+                <p><strong className="text-[#333333] uppercase text-[12px]">Phone:</strong> {initialProfile.phone_number || 'Not provided'}</p>
               </div>
             ) : (
-              <p className="text-muted-foreground">Profile information is unavailable.</p>
+              <p className="text-[#666666] text-[14px]">Profile information is unavailable.</p>
             )}
           </div>
         )}
 
         {activeTab === "orders" && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-semibold">Order History</h2>
+            <h2 className="text-[16px] font-bold uppercase text-[#333333] border-b border-[#e5e5e5] pb-4">Order History</h2>
             {initialOrders && initialOrders.length > 0 ? (
               <div className="space-y-4">
                 {initialOrders.map((order: any) => (
-                  <div key={order.id} className="border rounded-xl p-4 flex flex-col sm:flex-row justify-between gap-4">
+                  <div key={order.id} className="border border-[#e5e5e5] p-4 flex flex-col sm:flex-row justify-between gap-4">
                     <div>
-                      <p className="font-semibold">Order #{order.id}</p>
-                      <p className="text-sm text-muted-foreground">Placed on: {new Date(order.created_at).toLocaleDateString()}</p>
-                      <p className="text-sm mt-2">
-                        Status: <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700">{order.ordered ? "Confirmed" : "Pending"}</span>
+                      <p className="font-bold text-[#333333] uppercase text-[14px]">Order #{order.id}</p>
+                      <p className="text-[12px] text-[#666666] mt-1">Placed on: {new Date(order.created_at).toLocaleDateString()}</p>
+                      <p className="text-[13px] mt-3">
+                        Status: <span className="inline-flex items-center bg-[#f5f5f5] border border-[#e5e5e5] px-2 py-1 text-[11px] font-bold uppercase text-[#333333]">{order.ordered ? "Confirmed" : "Pending"}</span>
                       </p>
                     </div>
-                    <div className="text-right">
-                      <p className="font-bold text-lg">${order.total_price || "0.00"}</p>
-                      <Button variant="outline" size="sm" className="mt-2">Track Order</Button>
+                    <div className="text-right flex flex-col justify-between">
+                      <p className="font-bold text-[18px] text-[#dc3545]">${order.total_price || "0.00"}</p>
+                      <Button variant="outline" size="sm" className="mt-4 rounded-none border-[#e5e5e5] text-[11px] font-bold uppercase text-[#333333] hover:text-[#dc3545] hover:bg-[#f5f5f5]">Track Order</Button>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 bg-gray-50 rounded-xl">
-                <Package className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-                <p className="text-muted-foreground">You haven't placed any orders yet.</p>
+              <div className="text-center py-12 bg-[#f5f5f5] border border-[#e5e5e5]">
+                <Package className="h-10 w-10 mx-auto text-[#cccccc] mb-3" />
+                <p className="text-[#666666] text-[14px]">You haven't placed any orders yet.</p>
               </div>
             )}
           </div>
@@ -119,29 +114,31 @@ export function ProfileDashboard({ initialProfile, initialOrders, initialAddress
 
         {activeTab === "addresses" && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">Saved Addresses</h2>
-              <Button size="sm">Add New Address</Button>
+            <div className="flex items-center justify-between border-b border-[#e5e5e5] pb-4">
+              <h2 className="text-[16px] font-bold uppercase text-[#333333]">Saved Addresses</h2>
+              <Button size="sm" className="bg-[#dc3545] hover:bg-[#c82333] text-white rounded-none font-bold uppercase text-[11px]">Add New</Button>
             </div>
             {initialAddresses && initialAddresses.length > 0 ? (
               <div className="grid md:grid-cols-2 gap-4">
                 {initialAddresses.map((address: any) => (
-                  <div key={address.id} className="border rounded-xl p-4 relative">
+                  <div key={address.id} className="border border-[#e5e5e5] p-6 relative">
                     {address.is_default && (
-                      <span className="absolute top-4 right-4 text-xs font-bold bg-primary/10 text-primary px-2 py-1 rounded-md">Default</span>
+                      <span className="absolute top-4 right-4 text-[10px] font-bold uppercase bg-[#dc3545] text-white px-2 py-1">Default</span>
                     )}
-                    <h3 className="font-semibold mb-2">{address.first_name} {address.last_name}</h3>
-                    <p className="text-sm text-gray-600">{address.street_address}</p>
-                    {address.apartment_address && <p className="text-sm text-gray-600">{address.apartment_address}</p>}
-                    <p className="text-sm text-gray-600">{address.district?.name}, {address.zip_code}</p>
-                    <p className="text-sm text-gray-600 mt-2">{address.phone_number}</p>
+                    <h3 className="font-bold text-[14px] uppercase text-[#333333] mb-3">{address.first_name} {address.last_name}</h3>
+                    <div className="space-y-1 text-[13px] text-[#666666]">
+                      <p>{address.street_address}</p>
+                      {address.apartment_address && <p>{address.apartment_address}</p>}
+                      <p>{address.district?.name}, {address.zip_code}</p>
+                      <p className="mt-3 pt-3 border-t border-[#e5e5e5]">{address.phone_number}</p>
+                    </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 bg-gray-50 rounded-xl">
-                <MapPin className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-                <p className="text-muted-foreground">No saved addresses found.</p>
+              <div className="text-center py-12 bg-[#f5f5f5] border border-[#e5e5e5]">
+                <MapPin className="h-10 w-10 mx-auto text-[#cccccc] mb-3" />
+                <p className="text-[#666666] text-[14px]">No saved addresses found.</p>
               </div>
             )}
           </div>

@@ -88,68 +88,68 @@ export default function CheckoutPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="min-h-screen bg-[#f5f5f5] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[#dc3545]" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold tracking-tight mb-8">Checkout</h1>
+    <div className="min-h-screen bg-[#f5f5f5] flex flex-col pb-12">
+      <main className="flex-grow container mx-auto px-4 py-8 mt-8">
+        <h1 className="text-2xl font-bold uppercase text-[#333333] mb-8">Checkout</h1>
 
         {error && (
-          <div className="mb-8 p-4 bg-red-50 text-red-600 rounded-xl border border-red-200">
+          <div className="mb-8 p-4 bg-[#f8d7da] text-[#721c24] border border-[#f5c6cb]">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleCheckout} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <form onSubmit={handleCheckout} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-6">
             {/* Shipping Info */}
-            <Card className="border-none shadow-sm rounded-3xl overflow-hidden">
-              <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
-                <CardTitle className="text-xl">Shipping Information</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6 space-y-4">
+            <div className="bg-white border border-[#e5e5e5]">
+              <div className="bg-[#f5f5f5] border-b border-[#e5e5e5] p-4">
+                <h2 className="text-[16px] font-bold uppercase text-[#333333]">Shipping Information</h2>
+              </div>
+              <div className="p-6 space-y-4 text-[13px] text-[#666666]">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>First Name</Label>
-                    <Input name="first_name" required value={formData.first_name} onChange={handleInputChange} placeholder="John" />
+                    <Label className="text-[13px] font-bold uppercase text-[#333333]">First Name</Label>
+                    <Input className="rounded-none border-[#e5e5e5] focus-visible:ring-[#dc3545]" name="first_name" required value={formData.first_name} onChange={handleInputChange} placeholder="John" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Last Name</Label>
-                    <Input name="last_name" required value={formData.last_name} onChange={handleInputChange} placeholder="Doe" />
+                    <Label className="text-[13px] font-bold uppercase text-[#333333]">Last Name</Label>
+                    <Input className="rounded-none border-[#e5e5e5] focus-visible:ring-[#dc3545]" name="last_name" required value={formData.last_name} onChange={handleInputChange} placeholder="Doe" />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>Address</Label>
-                  <Input name="address" required value={formData.address} onChange={handleInputChange} placeholder="123 Main St" />
+                  <Label className="text-[13px] font-bold uppercase text-[#333333]">Address</Label>
+                  <Input className="rounded-none border-[#e5e5e5] focus-visible:ring-[#dc3545]" name="address" required value={formData.address} onChange={handleInputChange} placeholder="123 Main St" />
                 </div>
                 <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <Label>City</Label>
-                    <Input name="city" required value={formData.city} onChange={handleInputChange} placeholder="New York" />
+                    <Label className="text-[13px] font-bold uppercase text-[#333333]">City</Label>
+                    <Input className="rounded-none border-[#e5e5e5] focus-visible:ring-[#dc3545]" name="city" required value={formData.city} onChange={handleInputChange} placeholder="New York" />
                   </div>
                   <div className="space-y-2">
-                    <Label>State/District</Label>
-                    <Input name="state" required value={formData.state} onChange={handleInputChange} placeholder="NY" />
+                    <Label className="text-[13px] font-bold uppercase text-[#333333]">State/District</Label>
+                    <Input className="rounded-none border-[#e5e5e5] focus-visible:ring-[#dc3545]" name="state" required value={formData.state} onChange={handleInputChange} placeholder="NY" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Postal Code</Label>
-                    <Input name="postal_code" required value={formData.postal_code} onChange={handleInputChange} placeholder="10001" />
+                    <Label className="text-[13px] font-bold uppercase text-[#333333]">Postal Code</Label>
+                    <Input className="rounded-none border-[#e5e5e5] focus-visible:ring-[#dc3545]" name="postal_code" required value={formData.postal_code} onChange={handleInputChange} placeholder="10001" />
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <div className="bg-blue-50 text-blue-800 p-6 rounded-3xl border border-blue-100 flex items-start gap-4">
-              <Lock className="w-6 h-6 text-blue-600 shrink-0 mt-0.5" />
+            <div className="bg-[#e2e3e5] text-[#383d41] p-4 border border-[#d6d8db] flex items-start gap-4">
+              <Lock className="w-5 h-5 text-[#383d41] shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-lg">Secure Stripe Payment</h3>
-                <p className="text-sm opacity-90 mt-1">
+                <h3 className="font-bold text-[14px] uppercase">Secure Stripe Payment</h3>
+                <p className="text-[13px] mt-1">
                   You will be redirected to Stripe's secure checkout page to complete your payment. 
                   We do not store your payment information.
                 </p>
@@ -158,17 +158,17 @@ export default function CheckoutPage() {
           </div>
 
           {/* Checkout Summary */}
-          <div className="bg-white p-8 rounded-3xl shadow-sm h-fit sticky top-24 border border-gray-100">
-            <h2 className="text-xl font-bold mb-6">Order Total</h2>
+          <div className="bg-white p-6 border border-[#e5e5e5] h-fit sticky top-24">
+            <h2 className="text-[16px] font-bold uppercase text-[#333333] border-b border-[#e5e5e5] pb-4 mb-4">Order Total</h2>
 
-            <div className="space-y-4 text-sm mb-6 pb-6 border-b border-gray-100">
+            <div className="space-y-3 text-[14px] text-[#666666] mb-6 pb-6 border-b border-[#e5e5e5]">
               {cartItems.map((item, i) => {
                 const product = item.product || item.item;
                 if (!product) return null;
                 return (
                   <div key={i} className="flex justify-between">
-                    <span className="text-muted-foreground line-clamp-1 mr-4">{product.title} x {item.quantity}</span>
-                    <span className="font-medium shrink-0">
+                    <span className="line-clamp-1 mr-4 text-[#333333]">{product.title} <span className="text-[#666666]">x {item.quantity}</span></span>
+                    <span className="font-bold text-[#333333] shrink-0">
                       ${(parseFloat(product.discount_price || product.price) * item.quantity).toFixed(2)}
                     </span>
                   </div>
@@ -176,21 +176,21 @@ export default function CheckoutPage() {
               })}
             </div>
 
-            <div className="space-y-4 text-sm mb-6">
+            <div className="space-y-3 text-[14px] text-[#666666] mb-6">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Subtotal</span>
-                <span className="font-medium">${subtotal.toFixed(2)}</span>
+                <span>Subtotal</span>
+                <span className="font-bold text-[#333333]">${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Shipping</span>
-                <span className="font-medium">${shipping.toFixed(2)}</span>
+                <span>Shipping</span>
+                <span className="font-bold text-[#333333]">${shipping.toFixed(2)}</span>
               </div>
             </div>
 
-            <div className="border-t border-gray-100 pt-6 mb-8">
+            <div className="border-t border-[#e5e5e5] pt-4 mb-6">
               <div className="flex justify-between items-center">
-                <span className="font-bold text-lg">Total to Pay</span>
-                <span className="font-bold text-2xl text-primary">${total.toFixed(2)}</span>
+                <span className="font-bold uppercase text-[#333333]">Total to Pay</span>
+                <span className="font-bold text-[20px] text-[#dc3545]">${total.toFixed(2)}</span>
               </div>
             </div>
 
@@ -198,7 +198,7 @@ export default function CheckoutPage() {
               type="submit" 
               disabled={processing || cartItems.length === 0}
               size="lg" 
-              className="w-full rounded-full h-14 text-base font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 transition-all"
+              className="w-full bg-[#dc3545] hover:bg-[#c82333] text-white font-bold uppercase rounded-none h-12 transition-colors disabled:opacity-50"
             >
               {processing ? (
                 <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Processing...</>
@@ -207,7 +207,7 @@ export default function CheckoutPage() {
               )}
             </Button>
 
-            <p className="text-xs text-center text-muted-foreground mt-4 flex items-center justify-center gap-1">
+            <p className="text-[12px] text-center text-[#666666] mt-4 flex items-center justify-center gap-1">
               <Lock className="h-3 w-3" /> Secure encrypted payment
             </p>
           </div>

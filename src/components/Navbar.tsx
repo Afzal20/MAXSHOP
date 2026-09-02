@@ -24,9 +24,7 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
           <div className="flex items-center divide-x divide-[#e5e5e5]">
             <Link href="/login" className="px-4 flex items-center hover:text-[#e34444] transition-colors"><Lock className="w-3.5 h-3.5 mr-1.5"/> Login</Link>
             <Link href={isLoggedIn ? "/profile" : "/login"} className="px-4 flex items-center hover:text-[#e34444] transition-colors"><User className="w-3.5 h-3.5 mr-1.5"/> My Account <ChevronDown className="w-3 h-3 ml-1" /></Link>
-            <Link href="/checkout" className="px-4 flex items-center hover:text-[#e34444] transition-colors">Checkout <ChevronDown className="w-3 h-3 ml-1" /></Link>
-            <button className="px-4 flex items-center hover:text-[#e34444] transition-colors"><img src="https://flagcdn.com/w20/gb.png" alt="UK" className="w-4 mr-1.5" /> English <ChevronDown className="w-3 h-3 ml-1" /></button>
-            <button className="pl-4 pr-0 flex items-center hover:text-[#e34444] transition-colors">USD <ChevronDown className="w-3 h-3 ml-1" /></button>
+            <Link href="/checkout" className="pl-4 pr-0 flex items-center hover:text-[#e34444] transition-colors">Checkout <ChevronDown className="w-3 h-3 ml-1" /></Link>
           </div>
         </div>
       </div>
@@ -79,12 +77,6 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
           <div className="flex items-center h-full">
             <Link href="/" className="h-full flex items-center px-6 text-white text-[13px] font-bold hover:bg-[#e34444] transition-colors">HOME</Link>
             <Link href="/products" className="h-full flex items-center px-6 text-white text-[13px] font-bold hover:bg-[#e34444] transition-colors">SHOP</Link>
-            <Link href="/category/mobiles" className="h-full flex items-center px-6 text-white text-[13px] font-bold hover:bg-[#e34444] transition-colors">MOBILES</Link>
-            <Link href="/category/electronics" className="h-full flex items-center px-6 text-white text-[13px] font-bold hover:bg-[#e34444] transition-colors">ELECTRONICS</Link>
-            <Link href="/blog" className="h-full flex items-center px-6 text-white text-[13px] font-bold hover:bg-[#e34444] transition-colors">BLOG</Link>
-            <Link href="/pages" className="h-full flex items-center px-6 text-white text-[13px] font-bold hover:bg-[#e34444] transition-colors">PAGES</Link>
-            <Link href="/about" className="h-full flex items-center px-6 text-white text-[13px] font-bold hover:bg-[#e34444] transition-colors">ABOUT US</Link>
-            <Link href="/contact" className="h-full flex items-center px-6 text-white text-[13px] font-bold hover:bg-[#e34444] transition-colors">CONTACT US</Link>
           </div>
           
           <Link href="/cart">

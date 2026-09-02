@@ -25,10 +25,16 @@ export interface ItemColor {
 export interface Item {
   id: number;
   title: string;
-  slug: string;
+  slug?: string;
   price: string;
   discount_price?: string;
+  product_id?: string;
+  brand_name?: string;
+  number_of_items?: number;
+  is_featured?: boolean;
+  is_bestselling?: boolean;
   category: number | Category;
+  type?: { id: number; name: string };
   label?: string;
   description: string;
   images: ItemImage[];

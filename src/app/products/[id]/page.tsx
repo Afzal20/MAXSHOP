@@ -1,7 +1,7 @@
 import { fetchFromAPI } from "@/lib/api";
 import { Item } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Heart, Share2 } from "lucide-react";
+import { ChevronLeft, Heart, Share2, Tag, Package, Star, BadgeCheck } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductActionForm } from "@/components/ProductActionForm";
@@ -86,10 +86,28 @@ export default async function ProductPage({ params, searchParams }: Props) {
 
             {/* Product Info */}
             <div className="flex flex-col">
-              <div className="mb-2 flex items-center justify-between">
-                <span className="text-sm font-semibold text-primary uppercase tracking-wider bg-primary/10 px-3 py-1 rounded-full">
-                  {typeof product.category === 'object' ? (product.category as any)?.name : 'Category'}
-                </span>
+              <div className="mb-4 flex items-center justify-between">
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-xs font-semibold text-primary uppercase tracking-wider bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
+                    <Tag className="w-3 h-3" />
+                    {typeof product.category === 'object' ? (product.category as any)?.name : 'Category'}
+                  </span>
+                  {product.type && (
+                    <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider bg-blue-50 px-3 py-1 rounded-full">
+                      {product.type.name}
+                    </span>
+                  )}
+                  {product.is_bestselling && (
+                    <span className="text-xs font-semibold text-orange-600 uppercase tracking-wider bg-orange-50 px-3 py-1 rounded-full flex items-center gap-1">
+                      <Star className="w-3 h-3 fill-current" /> Bestseller
+                    </span>
+                  )}
+                  {product.is_featured && (
+                    <span className="text-xs font-semibold text-purple-600 uppercase tracking-wider bg-purple-50 px-3 py-1 rounded-full flex items-center gap-1">
+                      <BadgeCheck className="w-3 h-3" /> Featured
+                    </span>
+                  )}
+                </div>
                 <div className="flex gap-2">
                   <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:text-red-500 hover:bg-red-50">
                     <Heart className="h-5 w-5" />
@@ -100,9 +118,33 @@ export default async function ProductPage({ params, searchParams }: Props) {
                 </div>
               </div>
 
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-4">
+              {product.brand_name && (
+                <p className="text-sm font-semibold text-gray-500 tracking-wide uppercase mb-1">
+                  {product.brand_name}
+                </p>
+              )}
+              
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-2">
                 {product.title}
               </h1>
+
+              <div className="flex items-center gap-4 text-sm text-gray-500 mb-6 pb-6 border-b border-gray-100">
+                {product.product_id && (
+                  <span className="flex items-center gap-1">
+                    <span className="font-semibold text-gray-900">SKU:</span> {product.product_id}
+                  </span>
+                )}
+                {product.number_of_items !== undefined && (
+                  <span className="flex items-center gap-1">
+                    <Package className="w-4 h-4 text-gray-400" />
+                    {product.number_of_items > 0 ? (
+                      <span className="text-green-600 font-medium">{product.number_of_items} in stock</span>
+                    ) : (
+                      <span className="text-red-600 font-medium">Out of stock</span>
+                    )}
+                  </span>
+                )}
+              </div>
 
               <div className="flex items-baseline gap-4 mb-6">
                 <span className="text-3xl font-extrabold text-gray-900">

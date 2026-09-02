@@ -5,6 +5,8 @@ import { ChevronLeft, Heart, Share2, Tag, Package, Star, BadgeCheck } from "luci
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductActionForm } from "@/components/ProductActionForm";
+import { ProductGallery } from "@/components/ProductGallery";
+import { ProductInteractions } from "@/components/ProductInteractions";
 
 export const revalidate = 60; // ISR
 
@@ -52,37 +54,11 @@ export default async function ProductPage({ params, searchParams }: Props) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8 md:p-12">
 
             {/* Image Gallery */}
-            <div className="space-y-4">
-              <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden relative">
-                {product.images && product.images.length > 0 ? (
-                  <img
-                    src={product.images[0].image}
-                    alt={product.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400">
-                    No image available
-                  </div>
-                )}
-                {product.discount_price && (
-                  <div className="absolute top-4 left-4 bg-red-500 text-white font-bold px-4 py-1.5 rounded-full shadow-lg">
-                    SALE
-                  </div>
-                )}
-              </div>
-
-              {/* Thumbnails */}
-              {product.images && product.images.length > 1 && (
-                <div className="flex gap-4 overflow-x-auto pb-2">
-                  {product.images.map((img) => (
-                    <div key={img.id} className="w-24 h-24 flex-shrink-0 bg-gray-100 rounded-xl overflow-hidden cursor-pointer border-2 border-transparent hover:border-primary transition-colors">
-                      <img src={img.image} alt="thumbnail" className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <ProductGallery 
+              images={product.images} 
+              title={product.title} 
+              discount_price={product.discount_price} 
+            />
 
             {/* Product Info */}
             <div className="flex flex-col">
@@ -109,12 +85,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
                   )}
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:text-red-500 hover:bg-red-50">
-                    <Heart className="h-5 w-5" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground">
-                    <Share2 className="h-5 w-5" />
-                  </Button>
+                  <ProductInteractions productId={product.id} title={product.title} />
                 </div>
               </div>
 

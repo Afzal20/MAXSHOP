@@ -42,13 +42,13 @@ export default async function CategoriesPage() {
             <Card key={category.id} className="group overflow-hidden border-none shadow-sm hover:shadow-xl transition-all duration-300 bg-white cursor-pointer rounded-3xl h-64 flex flex-col">
               <Link href={`/products?category=${category.slug}`} className="flex-grow relative flex flex-col">
                 <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-gray-50 -z-10 group-hover:scale-105 transition-transform duration-500" />
-                
+
                 {category.image ? (
                   <div className="absolute inset-0 z-0">
-                    <img 
-                      src={category.image} 
-                      alt={category.name} 
-                      className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" 
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                     />
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                   </div>
@@ -57,7 +57,7 @@ export default async function CategoriesPage() {
                     <Layers className="w-48 h-48" />
                   </div>
                 )}
-                
+
                 <CardContent className="relative z-10 p-8 flex flex-col justify-end h-full">
                   <h2 className="text-2xl font-bold text-gray-900 group-hover:text-primary transition-colors">
                     {category.name}

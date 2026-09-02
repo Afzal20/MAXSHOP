@@ -50,7 +50,6 @@ export default async function ProductsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
@@ -79,8 +78,8 @@ export default async function ProductsPage() {
               <Link href={`/products/${product.id}`} className="flex-grow">
                 <div className="relative aspect-[4/5] bg-gray-100 overflow-hidden">
                   {product.images && product.images.length > 0 ? (
-                    <img 
-                      src={product.images[0].image} 
+                    <img
+                      src={product.images[0].image}
                       alt={product.title}
                       className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
                     />

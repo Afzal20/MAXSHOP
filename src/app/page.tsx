@@ -45,119 +45,243 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <main className="flex-grow">
-        {/* Hero Section */}
-        <section className="relative h-[80vh] min-h-[600px] w-full bg-slate-900 flex items-center justify-center overflow-hidden">
-          {/* Abstract gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 opacity-90" />
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay opacity-30" />
-
-          <div className="relative z-10 container mx-auto px-4 text-center">
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter text-white mb-6 drop-shadow-lg">
-              Elevate Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Style</span>
-            </h1>
-            <p className="text-xl text-gray-200 mb-10 max-w-2xl mx-auto drop-shadow">
-              Discover the latest trends in fashion and electronics. Premium quality, unparalleled design.
-            </p>
-            <div className="flex gap-4 justify-center">
-              <Button size="lg" className="bg-white text-black hover:bg-gray-100 rounded-full px-8">
-                Shop Now <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-              <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10 rounded-full px-8">
-                View Collections
-              </Button>
+    <div className="min-h-screen bg-[#f5f5f5] pb-12">
+      <main className="container mx-auto px-4 pt-6 flex flex-col md:flex-row gap-6">
+        
+        {/* Left Sidebar (1/4 width) */}
+        <aside className="w-full md:w-[270px] flex-shrink-0 flex flex-col gap-6">
+          
+          {/* CATEGORIES Menu */}
+          <div className="bg-white border border-[#e5e5e5]">
+            <div className="bg-[#e34444] text-white font-bold text-[13px] px-4 py-3 flex items-center">
+              CATEGORIES
             </div>
-          </div>
-        </section>
-
-        {/* Featured Products */}
-        <section className="py-24 container mx-auto px-4">
-          <div className="flex justify-between items-end mb-12">
-            <div>
-              <h2 className="text-3xl font-bold tracking-tight">Featured Products</h2>
-              <p className="text-muted-foreground mt-2">Handpicked essentials for your collection.</p>
-            </div>
-            <Link href="/products" className="text-primary hover:underline font-medium flex items-center">
-              View all <ArrowRight className="ml-1 h-4 w-4" />
-            </Link>
+            <ul className="text-[13px] text-[#666666] divide-y divide-[#f2f2f2]">
+              {categories.slice(0, 10).map((cat) => (
+                <li key={cat.id}>
+                  <Link href={`/category/${cat.slug}`} className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all">
+                    {cat.name}
+                  </Link>
+                </li>
+              ))}
+              {!categories.length && (
+                <>
+                  <li><Link href="#" className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all uppercase">MOBILE & TABLET</Link></li>
+                  <li><Link href="#" className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all uppercase">COMPUTER & ACCESSORIES</Link></li>
+                  <li><Link href="#" className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all uppercase">ELECTRONIC & CAMERA</Link></li>
+                  <li><Link href="#" className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all uppercase">FASHION & ACCESSORIES</Link></li>
+                  <li><Link href="#" className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all uppercase">SPORT & FITNESS</Link></li>
+                </>
+              )}
+            </ul>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {products.slice(0, 8).map((product) => (
-              <Card key={product.id} className="group overflow-hidden border-none shadow-sm hover:shadow-xl transition-all duration-300 bg-white cursor-pointer rounded-2xl flex flex-col">
-                <Link href={`/products/${product.id}`} className="flex-grow">
-                  <div className="relative aspect-[4/5] bg-gray-100 overflow-hidden">
+          {/* BEST SELLERS */}
+          <div className="bg-white border border-[#e5e5e5]">
+            <div className="bg-[#e34444] text-white font-bold text-[13px] px-4 py-3">
+              BEST SELLERS
+            </div>
+            <div className="p-4 flex flex-col gap-4">
+              {products.slice(0, 3).map((product) => (
+                <div key={product.id} className="flex gap-3 group cursor-pointer">
+                  <div className="w-20 h-20 border border-[#e5e5e5] flex-shrink-0 overflow-hidden relative flex items-center justify-center p-1">
+                     {product.images && product.images.length > 0 ? (
+                        <img src={toAbsoluteUrl(product.images[0].image)} alt={product.title} className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform" />
+                      ) : (
+                        <ShoppingBag className="w-6 h-6 text-gray-300" />
+                      )}
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <h4 className="text-[13px] text-[#333333] font-medium line-clamp-1 group-hover:text-[#e34444] transition-colors">{product.title}</h4>
+                    <div className="flex text-yellow-400 text-[10px] my-1">
+                      ★★★★☆
+                    </div>
+                    <div className="flex items-center gap-2">
+                       {product.discount_price && <span className="text-[11px] text-[#999999] line-through">${product.price}</span>}
+                       <span className="text-[14px] font-bold text-[#e34444]">${product.discount_price || product.price}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* LATEST POST */}
+          <div className="bg-white border border-[#e5e5e5]">
+            <div className="bg-[#e34444] text-white font-bold text-[13px] px-4 py-3">
+              LATEST POST
+            </div>
+            <div className="p-4">
+              <img src="https://images.unsplash.com/photo-1512418490979-92798cec1380?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" alt="Blog" className="w-full h-auto mb-3" />
+              <h4 className="text-[13px] font-bold text-[#333333] mb-2">Zima daze sima</h4>
+              <p className="text-[12px] text-[#666666] line-clamp-4 leading-relaxed">
+                Pellentesque et venenatis tortor, vitae sagittis massa. Aliquam erat volutpat. Quisque eu purus convallis, iaculis nisl id, iaculis lacus. Aenean...
+              </p>
+            </div>
+          </div>
+
+          {/* FAQS */}
+          <div className="bg-white border border-[#e5e5e5]">
+            <div className="bg-[#e34444] text-white font-bold text-[13px] px-4 py-3">
+              FAQS
+            </div>
+            <div className="text-[12px] text-[#666666] divide-y divide-[#f2f2f2]">
+               <div className="p-3 bg-[#f9f9f9]">
+                 <p className="font-bold mb-1">- Pellentesque vitae imperdiet in?</p>
+                 <p className="italic text-gray-500">Donec tempor, odio sed hendrerit placerat, trauma in posuere tortor...</p>
+               </div>
+               <div className="p-3 hover:bg-gray-50 cursor-pointer">+ Hendrerit eu nunc massa?</div>
+               <div className="p-3 hover:bg-gray-50 cursor-pointer">+ Suspendisse feugiat cursus?</div>
+            </div>
+          </div>
+        </aside>
+
+
+        {/* Right Main Content (3/4 width) */}
+        <div className="flex-1 flex flex-col gap-6 overflow-hidden">
+          
+          {/* Hero Banner */}
+          <div className="w-full relative aspect-[21/9] bg-[#e6e6e6] overflow-hidden">
+             <div className="absolute inset-0 bg-gradient-to-r from-[#94a3b8] to-[#cbd5e1] mix-blend-multiply opacity-50" />
+             <img src="https://images.unsplash.com/photo-1527698266440-12104e498b76?q=80&w=2070&auto=format&fit=crop" className="w-full h-full object-cover" alt="Banner" />
+             <div className="absolute inset-0 flex items-center p-12">
+                <div className="max-w-md">
+                   <h2 className="text-white text-4xl md:text-5xl font-black mb-2 uppercase drop-shadow-md">Our New Range of <br/><span className="text-[#e34444]">TABLET</span></h2>
+                   <p className="text-white text-xl font-bold tracking-widest drop-shadow-md">FOR LESS THAN $99.00</p>
+                </div>
+             </div>
+          </div>
+
+          {/* HOT DEALS */}
+          <div className="border border-[#e34444] bg-white">
+            <div className="bg-[#e34444] text-white font-bold text-[14px] px-4 py-2 inline-block relative">
+              HOT DEALS
+              <div className="absolute top-0 -right-[12px] w-0 h-0 border-t-[18px] border-t-transparent border-b-[18px] border-b-transparent border-l-[12px] border-l-[#e34444]"></div>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-x divide-[#e5e5e5] border-t border-[#e5e5e5]">
+              {products.slice(0, 4).map((product) => (
+                <div key={product.id} className="p-4 flex flex-col items-center relative group">
+                  <div className="absolute top-2 left-2 bg-[#f27420] text-white text-[10px] font-bold px-2 py-0.5 rounded-sm z-10">SALE</div>
+                  
+                  <div className="w-full aspect-square relative mb-4 flex items-center justify-center p-2">
                     {product.images && product.images.length > 0 ? (
-                      <img
-                        src={toAbsoluteUrl(product.images[0].image)}
-                        alt={product.title}
-                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
-                      />
+                      <img src={toAbsoluteUrl(product.images[0].image)} alt={product.title} className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400">
-                        <ShoppingBag className="h-12 w-12 opacity-20" />
-                      </div>
-                    )}
-                    {product.discount_price && (
-                      <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                        SALE
-                      </div>
+                      <ShoppingBag className="w-12 h-12 text-gray-300" />
                     )}
                   </div>
-                  <CardContent className="p-5">
-                    <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wider font-semibold">
-                      {typeof product.category === 'object' ? (product.category as any)?.name : 'Category'}
-                    </p>
-                    <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-primary transition-colors">
-                      {product.title}
-                    </h3>
-                    <div className="mt-2 flex items-baseline gap-2">
-                      <span className="font-bold text-xl">${product.discount_price || product.price}</span>
-                      {product.discount_price && (
-                        <span className="text-sm text-muted-foreground line-through">${product.price}</span>
-                      )}
+                  
+                  {/* Mock Countdown */}
+                  <div className="flex gap-1 mb-4">
+                    <div className="bg-[#999999] text-white flex flex-col items-center justify-center w-8 h-8 rounded-sm">
+                      <span className="text-[12px] font-bold leading-none">268</span>
+                      <span className="text-[8px]">DAYS</span>
                     </div>
-                  </CardContent>
-                </Link>
-              </Card>
-            ))}
-          </div>
-        </section>
-      </main>
+                    <div className="bg-[#999999] text-white flex flex-col items-center justify-center w-8 h-8 rounded-sm">
+                      <span className="text-[12px] font-bold leading-none">13</span>
+                      <span className="text-[8px]">HRS</span>
+                    </div>
+                    <div className="bg-[#999999] text-white flex flex-col items-center justify-center w-8 h-8 rounded-sm">
+                      <span className="text-[12px] font-bold leading-none">46</span>
+                      <span className="text-[8px]">MINS</span>
+                    </div>
+                    <div className="bg-[#999999] text-white flex flex-col items-center justify-center w-8 h-8 rounded-sm">
+                      <span className="text-[12px] font-bold leading-none">15</span>
+                      <span className="text-[8px]">SECS</span>
+                    </div>
+                  </div>
 
-      <footer className="bg-slate-950 text-slate-300 py-12 border-t border-slate-900">
-        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <span className="text-2xl font-bold tracking-tighter text-white">Luxe<span className="text-primary">Store</span></span>
-            <p className="mt-4 text-sm text-slate-400">The premier destination for premium goods and fashion.</p>
-          </div>
-          <div>
-            <h4 className="text-white font-semibold mb-4">Shop</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/products" className="hover:text-white transition-colors">All Products</Link></li>
-              <li><Link href="/categories" className="hover:text-white transition-colors">Categories</Link></li>
-              <li><Link href="/sale" className="hover:text-white transition-colors">Sale</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-white font-semibold mb-4">Support</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
-              <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
-              <li><Link href="/returns" className="hover:text-white transition-colors">Returns</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-white font-semibold mb-4">Newsletter</h4>
-            <p className="text-sm text-slate-400 mb-4">Subscribe for updates and exclusive offers.</p>
-            <div className="flex gap-2">
-              <input type="email" placeholder="Email address" className="bg-slate-900 border-none rounded-md px-3 py-2 text-sm w-full focus:outline-none focus:ring-1 focus:ring-primary text-white" />
-              <Button size="sm">Subscribe</Button>
+                  <div className="flex text-yellow-400 text-[11px] mb-2">★★★★★</div>
+                  <Link href={`/products/${product.id}`} className="text-[13px] text-[#333333] hover:text-[#e34444] text-center line-clamp-1 mb-2 font-medium transition-colors">
+                    {product.title}
+                  </Link>
+                  <div className="flex items-center gap-2">
+                    {product.discount_price && <span className="text-[12px] text-[#999999] line-through">${product.price}</span>}
+                    <span className="text-[16px] font-bold text-[#e34444]">${product.discount_price || product.price}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
+
+          {/* ELECTRONICS BANNER */}
+          <div className="bg-[#e34444] flex flex-col md:flex-row text-white mt-4 border-b-4 border-[#cc3a3a]">
+             <div className="p-4 md:p-6 flex-1 flex flex-col justify-center">
+                <h3 className="text-2xl md:text-3xl font-black mb-1">NEW ARRIVALS</h3>
+                <p className="text-[13px] opacity-90">Curabitur luctus ipsum eget convallis</p>
+             </div>
+             <div className="bg-[#cc3a3a] p-4 flex items-center justify-center gap-4">
+                <div className="text-center">
+                  <span className="text-4xl font-black block leading-none">50%</span>
+                  <span className="text-[11px] font-bold tracking-widest">OFF</span>
+                </div>
+                <div className="text-[11px] font-bold leading-tight border-l border-white/20 pl-4">
+                  ON ALL<br/>PRODUCTS
+                </div>
+             </div>
+             <div className="flex-1 bg-[url('https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?q=80&w=2027&auto=format&fit=crop')] bg-cover bg-center hidden md:block opacity-60">
+             </div>
+          </div>
+
+          {/* ELECTRONICS PRODUCTS */}
+          <div className="bg-white border border-[#e5e5e5]">
+            <div className="flex border-b border-[#e5e5e5]">
+              <div className="bg-[#e34444] text-white font-bold text-[14px] px-4 py-2 inline-block relative">
+                ELECTRONICS
+                <div className="absolute top-0 -right-[12px] w-0 h-0 border-t-[18px] border-t-transparent border-b-[18px] border-b-transparent border-l-[12px] border-l-[#e34444] z-10"></div>
+              </div>
+              <div className="flex-1 flex justify-end gap-6 text-[12px] text-[#666666] px-4 items-center overflow-x-auto hidden md:flex">
+                <span className="hover:text-[#e34444] cursor-pointer">Accessories</span>
+                <span className="hover:text-[#e34444] cursor-pointer">Book & Magazine</span>
+                <span className="hover:text-[#e34444] cursor-pointer">Gift</span>
+                <span className="hover:text-[#e34444] cursor-pointer">Screen Protectors</span>
+                <span className="hover:text-[#e34444] cursor-pointer">Sony</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-x divide-[#e5e5e5]">
+              {products.slice(0, 4).reverse().map((product) => (
+                <div key={product.id} className="p-4 flex flex-col items-center relative group">
+                  {product.discount_price && <div className="absolute top-2 left-2 bg-[#f27420] text-white text-[10px] font-bold px-2 py-0.5 rounded-sm z-10">SALE</div>}
+                  
+                  <div className="w-full aspect-square relative mb-4 flex items-center justify-center p-2">
+                    {product.images && product.images.length > 0 ? (
+                      <img src={toAbsoluteUrl(product.images[0].image)} alt={product.title} className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform" />
+                    ) : (
+                      <ShoppingBag className="w-12 h-12 text-gray-300" />
+                    )}
+                  </div>
+                  
+                  <div className="flex text-yellow-400 text-[11px] mb-2">★★★★★</div>
+                  <Link href={`/products/${product.id}`} className="text-[13px] text-[#333333] hover:text-[#e34444] text-center line-clamp-1 mb-2 font-medium transition-colors">
+                    {product.title}
+                  </Link>
+                  <div className="flex items-center gap-2">
+                    {product.discount_price && <span className="text-[12px] text-[#999999] line-through">${product.price}</span>}
+                    <span className="text-[16px] font-bold text-[#e34444]">${product.discount_price || product.price}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* MOBILES BANNER */}
+          <div className="bg-[#315682] flex flex-col md:flex-row text-white mt-4 border-b-4 border-[#254366]">
+             <div className="p-4 md:p-6 flex-1 flex flex-col justify-center bg-[#8dc0ea]">
+                <h3 className="text-[#315682] text-[12px] font-bold mb-1">END OF SEASON</h3>
+                <h3 className="text-[#e34444] text-2xl md:text-3xl font-black mb-1">SAVE 50% OFF</h3>
+                <p className="text-[#315682] text-[12px] font-medium">ALL ITEMS SELECTED</p>
+             </div>
+             <div className="p-4 md:p-6 flex-1 flex flex-col justify-center items-center text-center">
+                <h3 className="text-yellow-400 text-2xl font-black mb-1">NEW WATCHES</h3>
+                <p className="text-[12px]">UP TO <strong>25%</strong> OFF on all items</p>
+             </div>
+          </div>
+
         </div>
-      </footer>
+
+      </main>
     </div>
   );
 }

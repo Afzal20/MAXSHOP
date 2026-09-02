@@ -65,16 +65,16 @@ export function ProductActionForm({ product }: { product: Item }) {
       {/* Colors */}
       {product.item_color && product.item_color.length > 0 && (
         <div>
-          <h3 className="text-sm font-semibold text-gray-900 uppercase mb-3">Color</h3>
-          <div className="flex gap-3">
+          <h3 className="text-[13px] font-bold text-[#333333] uppercase mb-2">Color</h3>
+          <div className="flex gap-2">
             {product.item_color.map((c) => (
               <button
                 key={c.id}
                 onClick={() => setSelectedColor(c.color.hex_code || null)}
-                className={`w-10 h-10 rounded-full border-2 cursor-pointer shadow-sm transition-all ${
+                className={`w-8 h-8 border cursor-pointer transition-all ${
                   selectedColor === c.color.hex_code
-                    ? "border-gray-900 scale-110"
-                    : "border-transparent hover:border-gray-400"
+                    ? "border-[#e34444]"
+                    : "border-[#e5e5e5] hover:border-[#999999]"
                 }`}
                 style={{ backgroundColor: c.color.hex_code || "#000" }}
                 title={c.color.name}
@@ -88,58 +88,55 @@ export function ProductActionForm({ product }: { product: Item }) {
       {/* Sizes */}
       {product.item_size && product.item_size.length > 0 && (
         <div>
-          <div className="flex justify-between items-center mb-3">
-            <h3 className="text-sm font-semibold text-gray-900 uppercase">Size</h3>
-            <button className="text-sm text-primary hover:underline font-medium">Size Guide</button>
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="text-[13px] font-bold text-[#333333] uppercase">Size</h3>
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2">
             {product.item_size.map((s) => (
-              <Button
+              <button
                 key={s.id}
-                variant={selectedSize === s.size.name ? "default" : "outline"}
                 onClick={() => setSelectedSize(s.size.name)}
-                className={`h-12 px-6 rounded-xl font-medium ${
+                className={`px-4 py-2 text-[12px] font-bold uppercase transition-all ${
                   selectedSize === s.size.name
-                    ? "bg-gray-900 text-white"
-                    : "border-gray-200 hover:border-gray-900 text-gray-900"
+                    ? "bg-[#e34444] text-white border border-[#e34444]"
+                    : "bg-white text-[#666666] border border-[#e5e5e5] hover:border-[#e34444] hover:text-[#e34444]"
                 }`}
                 disabled={s.stock === 0}
               >
                 {s.size.name}
-              </Button>
+              </button>
             ))}
           </div>
         </div>
       )}
 
       {error && (
-        <div className="p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-200 mt-4">
+        <div className="p-3 text-[12px] text-white bg-[#e34444] border border-[#cc3a3a] mt-4">
           {error}
         </div>
       )}
 
       {success && (
-        <div className="p-3 text-sm text-green-700 bg-green-50 rounded-lg border border-green-200 mt-4">
+        <div className="p-3 text-[12px] text-white bg-green-600 border border-green-700 mt-4">
           Added to cart successfully!
         </div>
       )}
 
       {/* Actions */}
-      <div className="flex gap-4 mt-auto pt-6">
-        <Button
+      <div className="flex gap-4 mt-auto pt-4">
+        <button
           onClick={handleAddToCart}
           disabled={loading}
-          size="lg"
-          className="flex-1 h-14 rounded-xl text-lg font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 transition-all"
+          className="flex-1 bg-[#e34444] text-white h-12 flex items-center justify-center font-bold text-[14px] hover:bg-[#cc3a3a] transition-colors disabled:opacity-50"
         >
           {loading ? (
             "Adding..."
           ) : (
             <>
-              <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
+              <ShoppingCart className="mr-2 h-4 w-4" /> ADD TO CART
             </>
           )}
-        </Button>
+        </button>
       </div>
     </div>
   );

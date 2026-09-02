@@ -44,95 +44,88 @@ export default async function ProductPage({ params, searchParams }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <Link href="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary mb-8 transition-colors">
-          <ChevronLeft className="h-4 w-4 mr-1" /> Back to store
-        </Link>
+    <div className="min-h-screen bg-[#f5f5f5] pb-12">
+      {/* Page Header */}
+      <div className="bg-[#f5f5f5] py-4 border-b border-[#e5e5e5]">
+        <div className="container mx-auto px-4 flex text-[12px] text-[#666666]">
+          <Link href="/" className="hover:text-[#e34444] transition-colors">Home</Link>
+          <span className="mx-2">/</span>
+          <Link href="/products" className="hover:text-[#e34444] transition-colors">Shop</Link>
+          <span className="mx-2">/</span>
+          <span className="text-[#333333]">{product.title}</span>
+        </div>
+      </div>
 
-        <div className="bg-white rounded-3xl shadow-sm overflow-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8 md:p-12">
+      <main className="container mx-auto px-4 pt-6">
+        <div className="bg-white border border-[#e5e5e5]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+            {/* Image Gallery - Left Side */}
+            <div className="p-6 md:p-8 border-b md:border-b-0 md:border-r border-[#e5e5e5]">
+              <ProductGallery 
+                images={product.images} 
+                title={product.title} 
+                discount_price={product.discount_price} 
+              />
+            </div>
 
-            {/* Image Gallery */}
-            <ProductGallery 
-              images={product.images} 
-              title={product.title} 
-              discount_price={product.discount_price} 
-            />
-
-            {/* Product Info */}
-            <div className="flex flex-col">
-              <div className="mb-4 flex items-center justify-between">
-                <div className="flex flex-wrap gap-2">
-                  <span className="text-xs font-semibold text-primary uppercase tracking-wider bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
-                    <Tag className="w-3 h-3" />
-                    {typeof product.category === 'object' ? (product.category as any)?.name : 'Category'}
+            {/* Product Info - Right Side */}
+            <div className="p-6 md:p-8 flex flex-col">
+              
+              <div className="mb-2">
+                <span className="bg-[#e34444] text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider">
+                  {typeof product.category === 'object' ? (product.category as any)?.name : 'Category'}
+                </span>
+                {product.is_bestselling && (
+                  <span className="bg-yellow-400 text-black text-[10px] font-bold px-2 py-1 uppercase tracking-wider ml-2">
+                    Bestseller
                   </span>
-                  {product.type && (
-                    <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider bg-blue-50 px-3 py-1 rounded-full">
-                      {product.type.name}
-                    </span>
-                  )}
-                  {product.is_bestselling && (
-                    <span className="text-xs font-semibold text-orange-600 uppercase tracking-wider bg-orange-50 px-3 py-1 rounded-full flex items-center gap-1">
-                      <Star className="w-3 h-3 fill-current" /> Bestseller
-                    </span>
-                  )}
-                  {product.is_featured && (
-                    <span className="text-xs font-semibold text-purple-600 uppercase tracking-wider bg-purple-50 px-3 py-1 rounded-full flex items-center gap-1">
-                      <BadgeCheck className="w-3 h-3" /> Featured
-                    </span>
-                  )}
-                </div>
-                <div className="flex gap-2">
-                  <ProductInteractions productId={product.id} title={product.title} />
-                </div>
+                )}
               </div>
 
-              {product.brand_name && (
-                <p className="text-sm font-semibold text-gray-500 tracking-wide uppercase mb-1">
-                  {product.brand_name}
-                </p>
-              )}
-              
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-2">
+              <h1 className="text-2xl font-bold text-[#333333] mb-2">
                 {product.title}
               </h1>
 
-              <div className="flex items-center gap-4 text-sm text-gray-500 mb-6 pb-6 border-b border-gray-100">
-                {product.product_id && (
-                  <span className="flex items-center gap-1">
-                    <span className="font-semibold text-gray-900">SKU:</span> {product.product_id}
-                  </span>
-                )}
-                {product.number_of_items !== undefined && (
-                  <span className="flex items-center gap-1">
-                    <Package className="w-4 h-4 text-gray-400" />
-                    {product.number_of_items > 0 ? (
-                      <span className="text-green-600 font-medium">{product.number_of_items} in stock</span>
-                    ) : (
-                      <span className="text-red-600 font-medium">Out of stock</span>
-                    )}
-                  </span>
-                )}
+              <div className="flex text-yellow-400 text-[13px] mb-4">
+                ★★★★★ <span className="text-[#999999] ml-2">(12 reviews)</span>
               </div>
 
-              <div className="flex items-baseline gap-4 mb-6">
-                <span className="text-3xl font-extrabold text-gray-900">
+              <div className="flex items-baseline gap-3 mb-6 pb-6 border-b border-[#e5e5e5]">
+                <span className="text-3xl font-black text-[#e34444]">
                   ${product.discount_price || product.price}
                 </span>
                 {product.discount_price && (
-                  <span className="text-xl text-muted-foreground line-through font-medium">
+                  <span className="text-lg text-[#999999] line-through font-medium">
                     ${product.price}
                   </span>
                 )}
               </div>
 
-              <div className="prose prose-sm text-gray-600 mb-8 leading-relaxed">
-                <p>{product.description || "No description provided."}</p>
+              <div className="text-[13px] text-[#666666] leading-relaxed mb-6">
+                <p>{product.description || "No description provided for this product."}</p>
               </div>
 
-              <hr className="my-6 border-gray-100" />
+              <div className="text-[13px] text-[#333333] mb-6 space-y-2">
+                {product.product_id && (
+                  <div><span className="font-bold">Product ID:</span> {product.product_id}</div>
+                )}
+                {product.number_of_items !== undefined && (
+                  <div>
+                    <span className="font-bold">Availability:</span>{" "}
+                    {product.number_of_items > 0 ? (
+                      <span className="text-green-600 font-bold">In Stock ({product.number_of_items})</span>
+                    ) : (
+                      <span className="text-red-600 font-bold">Out of stock</span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-4 mb-6">
+                 <ProductInteractions productId={product.id} title={product.title} />
+              </div>
+
+              <hr className="border-[#e5e5e5] mb-6" />
 
               {/* Actions & Selectors */}
               <ProductActionForm product={product} />

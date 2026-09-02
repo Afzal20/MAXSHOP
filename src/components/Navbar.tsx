@@ -5,7 +5,7 @@ import { ShoppingCart, User, Search } from "lucide-react";
 import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
 
-export function Navbar() {
+export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
   const pathname = usePathname();
   const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-otp"];
   
@@ -44,7 +44,7 @@ export function Navbar() {
               <span className="sr-only">Cart</span>
             </Button>
           </Link>
-          <Link href="/login">
+          <Link href={isLoggedIn ? "/profile" : "/login"}>
             <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />
               <span className="sr-only">Account</span>

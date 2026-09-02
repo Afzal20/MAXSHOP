@@ -19,8 +19,12 @@ export const metadata: Metadata = {
 };
 
 import { Providers } from "@/components/Providers";
+import { cookies } from "next/headers";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const isLoggedIn = cookieStore.has("access_token");
+
   return (
     <html
       lang="en"
@@ -28,7 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="min-h-full flex flex-col">
         <Providers>
-          <Navbar />
+          <Navbar isLoggedIn={isLoggedIn} />
           {children}
         </Providers>
       </body>

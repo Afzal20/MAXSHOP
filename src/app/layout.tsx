@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 };
 
 import { Providers } from "@/components/Providers";
+import { ChatWidget } from "@/components/ChatWidget";
 import { cookies } from "next/headers";
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -34,6 +35,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Providers>
           <Navbar isLoggedIn={isLoggedIn} />
           {children}
+          <ChatWidget />
         </Providers>
       </body>
     </html>

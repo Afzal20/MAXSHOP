@@ -16,6 +16,14 @@ A high-performance, modern multi-vendor e-commerce storefront built with Next.js
 
 ---
 
+## Video Walkthrough
+
+A high-definition sequential walkthrough video demonstrating the full end-to-end platform functionality is available:
+- **Video File (MP4)**: [client_showcase_walkthrough.mp4](public/client_showcase_walkthrough.mp4)
+- **Voice-Over & Presentation Script**: [CLIENT_SHOWCASE_SCRIPT.md](../CLIENT_SHOWCASE_SCRIPT.md)
+
+---
+
 ## Visual Showcase
 
 ### 1. Homepage Hero & Promotional Banner Slider

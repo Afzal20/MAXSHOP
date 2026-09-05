@@ -1,4 +1,14 @@
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+export default async function AuthLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value || cookieStore.get("refresh_token")?.value;
+
+  if (token) {
+    redirect("/");
+  }
+
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
       {/* Left side - Form */}
@@ -19,7 +29,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="absolute inset-0 flex flex-col justify-end p-16 z-20">
           <blockquote className="text-white">
             <p className="text-3xl font-medium mb-4">
-              "The finest materials. Uncompromising design. LuxeStore elevates your lifestyle to the next level."
+              &ldquo;The finest materials. Uncompromising design. LuxeStore elevates your lifestyle to the next level.&rdquo;
             </p>
             <footer className="text-lg text-gray-300">
               - Sofia Rossi, Lead Designer

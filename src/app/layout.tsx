@@ -24,7 +24,7 @@ import { cookies } from "next/headers";
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
-  const isLoggedIn = cookieStore.has("access_token");
+  const isLoggedIn = cookieStore.has("access_token") || cookieStore.has("refresh_token");
 
   return (
     <html

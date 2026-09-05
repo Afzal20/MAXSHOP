@@ -1,16 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingCart, Search, Phone, ChevronDown, User, LogIn, Lock } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { ShoppingCart, Search, Phone, ChevronDown, User, Lock, LogOut } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 
 export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
   const pathname = usePathname();
+  const router = useRouter();
   const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-otp"];
   
   if (authRoutes.includes(pathname)) {
     return null;
   }
+
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("/api/auth/logout", { method: "POST" });
+      if (res.ok) {
+        router.push("/login");
+        router.refresh();
+      }
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
 
   return (
     <header className="w-full font-sans bg-white">
@@ -22,7 +35,19 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
             <span>Maecenas faucibus mollis</span>
           </div>
           <div className="flex items-center divide-x divide-[#e5e5e5]">
-            <Link href="/login" className="px-4 flex items-center hover:text-[#e34444] transition-colors"><Lock className="w-3.5 h-3.5 mr-1.5"/> Login</Link>
+            {isLoggedIn ? (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="px-4 flex items-center hover:text-[#e34444] transition-colors cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5 mr-1.5" /> Logout
+              </button>
+            ) : (
+              <Link href="/login" className="px-4 flex items-center hover:text-[#e34444] transition-colors">
+                <Lock className="w-3.5 h-3.5 mr-1.5" /> Login
+              </Link>
+            )}
             <Link href={isLoggedIn ? "/profile" : "/login"} className="px-4 flex items-center hover:text-[#e34444] transition-colors"><User className="w-3.5 h-3.5 mr-1.5"/> My Account <ChevronDown className="w-3 h-3 ml-1" /></Link>
             <Link href="/checkout" className="pl-4 pr-0 flex items-center hover:text-[#e34444] transition-colors">Checkout <ChevronDown className="w-3 h-3 ml-1" /></Link>
           </div>

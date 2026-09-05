@@ -1,44 +1,52 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ProfileDashboard } from "./ProfileDashboard";
-import { fetchFromAPI } from "@/lib/api";
+import { apiFetch, getAccessToken, getRefreshToken } from "@/lib/auth";
 
 export const metadata = {
-  title: "My Profile - LuxeStore",
+  title: "My Account - LuxeStore",
+  description: "Manage your profile, order history, addresses, and account security.",
 };
 
 export default async function ProfilePage() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("access_token")?.value;
+  const [accessToken, refreshToken] = await Promise.all([
+    getAccessToken(),
+    getRefreshToken(),
+  ]);
 
-  if (!token) {
-    redirect("/login");
+  if (!accessToken && !refreshToken) {
+    redirect("/login?redirect=/profile");
   }
 
-  const headers = {
-    Cookie: `access_token=${token}`,
-  };
+  const [profileRes, ordersRes, addressesRes] = await Promise.all([
+    apiFetch<any>("/accounts/user/profile/"),
+    apiFetch<any[]>("/shop/orders/"),
+    apiFetch<any[]>("/shop/billing-addresses/"),
+  ]);
 
-  try {
-    const [profile, orders, addresses] = await Promise.all([
-      fetchFromAPI("/accounts/user/profile/", { headers }).catch(() => null),
-      fetchFromAPI("/shop/orders/", { headers }).catch(() => []),
-      fetchFromAPI("/shop/billing-addresses/", { headers }).catch(() => []),
-    ]);
+  if (!profileRes.ok && profileRes.status === 401) {
+    redirect("/login?redirect=/profile");
+  }
 
-    return (
-      <div className="container mx-auto px-4 py-12 max-w-6xl">
-        <h1 className="text-3xl font-bold mb-8">My Account</h1>
-        <ProfileDashboard 
-          initialProfile={profile} 
-          initialOrders={orders} 
-          initialAddresses={addresses} 
+  return (
+    <div className="min-h-screen bg-[#f5f5f5] pb-16">
+      {/* Breadcrumb Header */}
+      <div className="bg-[#f5f5f5] py-4 border-b border-[#e5e5e5]">
+        <div className="container mx-auto px-4 flex text-[12px] text-[#666666]">
+          <a href="/" className="hover:text-[#e34444] transition-colors">
+            Home
+          </a>
+          <span className="mx-2">/</span>
+          <span className="text-[#333333] font-medium">My Account</span>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 pt-8 max-w-6xl">
+        <ProfileDashboard
+          initialProfile={profileRes.data}
+          initialOrders={ordersRes.data || []}
+          initialAddresses={addressesRes.data || []}
         />
       </div>
-    );
-  } catch (error) {
-    console.error("Failed to fetch profile data:", error);
-    // If auth failed drastically, maybe redirect to login
-    redirect("/login");
-  }
+    </div>
+  );
 }

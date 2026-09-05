@@ -371,7 +371,7 @@ export function ChatWidget() {
 
   const openPanel = useCallback(() => {
     setIsOpen(true);
-    if (connState === "idle" || connState === "error") {
+    if (connState !== "open" && connState !== "connecting") {
       void connect();
     }
   }, [connState, connect]);
@@ -455,6 +455,12 @@ export function ChatWidget() {
     };
   }, []);
 
+  useEffect(() => {
+    if (isOpen && (connState === "unauthenticated" || connState === "error" || connState === "idle")) {
+      void connect();
+    }
+  }, [pathname, isOpen, connState, connect]);
+
   if (HIDDEN_ROUTES.includes(pathname)) return null;
 
   const currentProduct = getCurrentProductContext();
@@ -529,12 +535,20 @@ export function ChatWidget() {
                 <p className="text-sm text-gray-600 mb-3">
                   Sign in to chat with the shopping assistant.
                 </p>
-                <Link
-                  href="/login"
-                  className="inline-block bg-[#e34444] text-white text-sm font-bold px-5 py-2 rounded-full hover:bg-[#cc3a3a] transition-colors"
-                >
-                  Sign in
-                </Link>
+                <div className="flex items-center justify-center gap-2">
+                  <Link
+                    href="/login"
+                    className="inline-block bg-[#e34444] text-white text-sm font-bold px-5 py-2 rounded-full hover:bg-[#cc3a3a] transition-colors"
+                  >
+                    Sign in
+                  </Link>
+                  <button
+                    onClick={() => void connect()}
+                    className="inline-block bg-gray-100 hover:bg-gray-200 text-[#333333] text-sm font-bold px-4 py-2 rounded-full transition-colors"
+                  >
+                    Retry
+                  </button>
+                </div>
               </div>
             )}
             {connState === "error" && (

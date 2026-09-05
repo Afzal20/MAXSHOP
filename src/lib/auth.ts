@@ -56,6 +56,7 @@ export async function refreshAuthTokens(): Promise<{
         "Content-Type": "application/json",
         Cookie: `${REFRESH_COOKIE}=${refreshToken}`,
       },
+      body: JSON.stringify({ refresh: refreshToken }),
       cache: "no-store",
     });
     if (!res.ok) return null;
@@ -88,7 +89,19 @@ export async function apiFetch<T = unknown>(
 ): Promise<ApiResult<T>> {
   let accessToken = await getAccessToken();
   if (!accessToken) {
-    return { ok: false, status: 401, data: null };
+    const refreshToken = await getRefreshToken();
+    if (refreshToken) {
+      const refreshed = await refreshAuthTokens();
+      if (refreshed) {
+        await setAuthCookies(refreshed.access, refreshed.refresh);
+        accessToken = refreshed.access;
+      } else {
+        await clearAuthCookies();
+        return { ok: false, status: 401, data: null };
+      }
+    } else {
+      return { ok: false, status: 401, data: null };
+    }
   }
 
   const baseHeaders: Record<string, string> = {

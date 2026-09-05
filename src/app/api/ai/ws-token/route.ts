@@ -29,15 +29,13 @@ function getTokenExpiry(token: string): number | null {
 
 export async function GET() {
   let accessToken = await getAccessToken();
-  if (!accessToken) {
-    return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
-  }
 
-  // If the access token is expired (or about to), rotate it via the refresh
-  // cookie so the WebSocket gets a token that is definitely valid.
-  const expiry = getTokenExpiry(accessToken);
-  const aboutToExpire = expiry === null || expiry * 1000 - Date.now() < 30_000;
-  if (aboutToExpire && (await getRefreshToken())) {
+  if (!accessToken) {
+    const refreshToken = await getRefreshToken();
+    if (!refreshToken) {
+      return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
+    }
+
     const refreshed = await refreshAuthTokens();
     if (refreshed) {
       await setAuthCookies(refreshed.access, refreshed.refresh);
@@ -47,6 +45,17 @@ export async function GET() {
         { error: "Session expired. Please sign in again." },
         { status: 401 }
       );
+    }
+  } else {
+    // If access token is present, check expiry
+    const expiry = getTokenExpiry(accessToken);
+    const aboutToExpire = expiry === null || expiry * 1000 - Date.now() < 30_000;
+    if (aboutToExpire && (await getRefreshToken())) {
+      const refreshed = await refreshAuthTokens();
+      if (refreshed) {
+        await setAuthCookies(refreshed.access, refreshed.refresh);
+        accessToken = refreshed.access;
+      }
     }
   }
 

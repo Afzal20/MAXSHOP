@@ -25,52 +25,101 @@ Dynamic homepage layout featuring the category navigation sidebar, database-driv
 
 ---
 
-### 2. Featured & Best Selling Products Showcase
+### 2. Dynamic Promotional Banner Carousel (Slide 2)
+Multi-image promotional slider demonstrating seamless slide transition, custom display badge ("Smart Wearable & Watch Collection"), and active pagination indicators.
+
+![Promotional Banner Slider](screenshots/02_banner_slider_slide2.png)
+
+---
+
+### 3. Featured & Best Selling Products Showcase
 Collection showcase displaying active featured and best-selling inventory with instant category navigation, discount tags, rating stars, and fully clickable product cards.
 
-![Featured and Best Selling Products](screenshots/02_featured_bestsellers.png)
+![Featured and Best Selling Products](screenshots/03_featured_bestsellers.png)
 
 ---
 
-### 3. Product Details Page
+### 4. Product Details & Real-Time Pricing
 Comprehensive product page with image gallery, real-time discount calculation, stock status indicators, SKU identifiers, quantity selectors, and direct cart operations.
 
-![Product Details Page](screenshots/03_product_detail.png)
+![Product Details Page](screenshots/04_product_details_powder_canister.png)
 
 ---
 
-### 4. Real-Time AI Shopping Assistant (ShopMate)
+### 5. Product Details & Full Specifications View
+Detailed view showing customer reviews, ratings summary, category breadcrumb trails, brand metadata, and product tags.
+
+![Product Details Specifications](screenshots/05_product_details_view.png)
+
+---
+
+### 6. Product Variant & Category Showcase
+Product detail display for fashion and cosmetics variants with high-resolution imagery and dynamic pricing badges.
+
+![Product Variant Showcase](screenshots/06_product_eyeshadow_palette.png)
+
+---
+
+### 7. Real-Time AI Shopping Assistant (ShopMate)
 Interactive AI shopping assistant connected via WebSockets, answering questions grounded in live product inventory with streaming tokens, discount explanations, and direct action triggers.
 
-![AI Shopping Assistant](screenshots/04_ai_shopping_assistant.png)
+![AI Shopping Assistant Live Chat](screenshots/07_ai_assistant_live_chat.png)
 
 ---
 
-### 5. High-Contrast Dark Mode Aesthetic
+### 8. AI Assistant Greeting & Suggestion Chips
+Floating AI assistant widget featuring custom avatar branding, store status indicators, and contextual one-click suggestion chips.
+
+![AI Assistant Greeting](screenshots/08_ai_assistant_welcome_suggestions.png)
+
+---
+
+### 9. AI Assistant Catalog Grounded Response & Token Streaming
+Real-time response streaming with live inventory grounding, quoting exact prices, discount amounts, and stock availability directly from the catalog.
+
+![AI Assistant Grounded Response](screenshots/09_ai_assistant_catalog_response.png)
+
+---
+
+### 10. High-Contrast Dark Mode Aesthetic
 Full-system dark mode support switchable instantly through user preference or by prompting the AI shopping assistant directly.
 
-![Dark Mode Theme](screenshots/05_dark_mode_theme.png)
+![Dark Mode Theme](screenshots/10_dark_mode_theme.png)
 
 ---
 
-### 6. Customer Account & Order Management
-Customer portal featuring profile editing, address book management, real-time order history, and credential updates.
+### 11. Customer Account Dashboard & KPI Counters
+Customer portal featuring profile overview, total order counts, address book summaries, and account verification status.
 
-![Customer Account Dashboard](screenshots/06_customer_account_dashboard.png)
+![Customer Account Dashboard](screenshots/11_customer_account_dashboard.png)
 
 ---
 
-### 7. Shopping Cart & Checkout Flow
+### 12. Customer Profile & Order History Overview
+Tabbed account management interface displaying personal details, purchase timeline, and account security.
+
+![Customer Account Overview](screenshots/12_customer_account_overview.png)
+
+---
+
+### 13. Customer Address Book Management
+Address management interface allowing users to view, add, and update shipping and billing addresses with real-time feedback.
+
+![Customer Saved Addresses](screenshots/13_customer_saved_addresses.png)
+
+---
+
+### 14. Shopping Cart & Checkout Flow
 Streamlined cart management with real-time total calculations, quantity modifications, item removals, and direct checkout routing.
 
-![Shopping Cart](screenshots/07_shopping_cart.png)
+![Shopping Cart](screenshots/14_shopping_cart_checkout.png)
 
 ---
 
-### 8. Django Administrative Back-Office
+### 15. Django Administrative Back-Office
 Centralized administration interface for managing vendors, products, inventory, orders, banner sliders, and site-wide configuration.
 
-![Django Admin Dashboard](screenshots/08_django_admin_dashboard.png)
+![Django Admin Panel](screenshots/15_django_admin_panel.png)
 
 ---
 
@@ -97,7 +146,7 @@ Centralized administration interface for managing vendors, products, inventory, 
 ```text
 storefront/
 ├── public/                     # Static public assets and icons
-├── screenshots/                # Showcase screenshots for documentation
+├── screenshots/                # Showcase screenshots for documentation (15 images)
 ├── src/
 │   ├── app/
 │   │   ├── (auth)/             # Auth group: login, register, reset password, OTP
@@ -229,5 +278,5 @@ npm run lint
 ## Quality Assurance & Verification
 
 - Type Safety: Fully typed with strict TypeScript (`npx tsc --noEmit` exits with 0 errors).
-- Automated End-to-End Testing: Verified via Playwright automated browser test suites covering catalog navigation, authentication, profile updates, address creation, and live AI assistant chat.
+- Automated End-to-End Testing: Verified via automated browser test suites covering catalog navigation, authentication, profile updates, address creation, and live AI assistant chat.
 - Zero Layout Shifts: Server-side data fetching ensures instant, stable rendering for hotlines, categories, and banners.

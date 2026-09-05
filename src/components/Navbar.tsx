@@ -59,9 +59,9 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
         {/* Search Bar Left */}
         <div className="flex items-center flex-1 max-w-md">
           <div className="flex w-full border-2 border-[#e5e5e5] rounded-full overflow-hidden focus-within:border-[#e34444] transition-colors h-11">
-            <button className="flex items-center px-4 bg-gray-50 border-r border-[#e5e5e5] text-sm text-gray-700 font-medium whitespace-nowrap hover:bg-gray-100">
+            <Link href="/categories" className="flex items-center px-4 bg-gray-50 border-r border-[#e5e5e5] text-sm text-gray-700 font-medium whitespace-nowrap hover:bg-gray-100">
               All Categories <ChevronDown className="w-4 h-4 ml-2" />
-            </button>
+            </Link>
             <input 
               type="text" 
               placeholder="Search for products" 
@@ -102,6 +102,7 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
           <div className="flex items-center h-full">
             <Link href="/" className="h-full flex items-center px-6 text-white text-[13px] font-bold hover:bg-[#e34444] transition-colors">HOME</Link>
             <Link href="/products" className="h-full flex items-center px-6 text-white text-[13px] font-bold hover:bg-[#e34444] transition-colors">SHOP</Link>
+            <Link href="/categories" className="h-full flex items-center px-6 text-white text-[13px] font-bold hover:bg-[#e34444] transition-colors">CATEGORIES</Link>
           </div>
           
           <Link href="/cart">

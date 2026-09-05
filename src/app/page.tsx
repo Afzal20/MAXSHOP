@@ -1,10 +1,45 @@
 import { fetchFromAPI } from "@/lib/api";
 import { Item, Category } from "@/lib/types";
 import { toAbsoluteUrl } from "@/lib/media";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, ShoppingBag } from "lucide-react";
+import {
+  ArrowRight,
+  ShoppingBag,
+  Smartphone,
+  Laptop,
+  Sparkles,
+  Watch,
+  Shirt,
+  Footprints,
+  Gem,
+  Glasses,
+  Sofa,
+  Utensils,
+  Bike,
+  Trophy,
+  Flower2,
+  Package,
+  Layers,
+} from "lucide-react";
 import Link from "next/link";
+
+function getCategoryIcon(name: string) {
+  const lower = name.toLowerCase();
+  if (lower.includes("smart") || lower.includes("phone")) return Smartphone;
+  if (lower.includes("laptop") || lower.includes("tablet")) return Laptop;
+  if (lower.includes("beauty") || lower.includes("skin")) return Sparkles;
+  if (lower.includes("watch")) return Watch;
+  if (lower.includes("shirt") || lower.includes("dress") || lower.includes("top")) return Shirt;
+  if (lower.includes("shoe")) return Footprints;
+  if (lower.includes("jewel")) return Gem;
+  if (lower.includes("bag")) return ShoppingBag;
+  if (lower.includes("sunglass") || lower.includes("glass")) return Glasses;
+  if (lower.includes("furniture") || lower.includes("home")) return Sofa;
+  if (lower.includes("kitchen") || lower.includes("grocer")) return Utensils;
+  if (lower.includes("motorcycle") || lower.includes("vehicle")) return Bike;
+  if (lower.includes("sport")) return Trophy;
+  if (lower.includes("fragrance")) return Flower2;
+  return Package;
+}
 
 export const revalidate = 60; // Revalidate every minute for ISR
 
@@ -26,7 +61,7 @@ export default async function Home() {
   if (products.length === 0) {
     products = [
       {
-        id: 1, title: "Premium Leather Jacket", slug: "premium-leather-jacket", price: "299.99", discount_price: "249.99", description: "", images: [], item_size: [{ id: 1, size: { id: 1, name: "M" }, stock: 10, price_for_this_size: 0, item: 1 }] as any, item_color: [{ id: 1, color: { id: 1, name: "Black", hex_code: "#000000" }, item: 1 }] as any,
+        id: 1, title: "Premium Leather Jacket", slug: "premium-leather-jacket", price: "299.99", discount_price: "249.99", description: "", images: [], item_size: [{ id: 1, size: { id: 1, name: "M" }, stock: 10 }] as Item["item_size"], item_color: [{ id: 1, color: { id: 1, name: "Black", hex_code: "#000000" } }] as Item["item_color"],
         category: { id: 1, name: "Clothing", slug: "clothing" }
       },
       {
@@ -53,25 +88,37 @@ export default async function Home() {
           
           {/* CATEGORIES Menu */}
           <div className="bg-white border border-[#e5e5e5]">
-            <div className="bg-[#e34444] text-white font-bold text-[13px] px-4 py-3 flex items-center">
-              CATEGORIES
+            <div className="bg-[#e34444] text-white font-bold text-[13px] px-4 py-3 flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <Layers className="w-4 h-4" />
+                CATEGORIES
+              </span>
+              <span className="bg-black/20 text-white text-[11px] px-2 py-0.5 rounded-full font-bold">
+                {categories.length}
+              </span>
             </div>
-            <ul className="text-[13px] text-[#666666] divide-y divide-[#f2f2f2]">
-              {categories.slice(0, 10).map((cat) => (
-                <li key={cat.id}>
-                  <Link href={`/category/${cat.slug}`} className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all">
-                    {cat.name}
-                  </Link>
-                </li>
-              ))}
+            <ul className="text-[13px] text-[#666666] divide-y divide-[#f2f2f2] max-h-[460px] overflow-y-auto">
+              {categories.map((cat) => {
+                const IconComponent = getCategoryIcon(cat.name);
+                return (
+                  <li key={cat.id}>
+                    <Link
+                      href={`/products?category=${encodeURIComponent(cat.name)}`}
+                      className="flex items-center justify-between px-4 py-2.5 hover:text-[#e34444] hover:bg-gray-50 hover:pl-5 transition-all group"
+                    >
+                      <span className="flex items-center gap-2.5 truncate">
+                        <IconComponent className="w-3.5 h-3.5 text-gray-400 group-hover:text-[#e34444] flex-shrink-0 transition-colors" />
+                        <span className="truncate">{cat.name.replace(/-/g, " ")}</span>
+                      </span>
+                      <span className="text-gray-300 group-hover:text-[#e34444] text-xs transition-colors">›</span>
+                    </Link>
+                  </li>
+                );
+              })}
               {!categories.length && (
-                <>
-                  <li><Link href="#" className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all uppercase">MOBILE & TABLET</Link></li>
-                  <li><Link href="#" className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all uppercase">COMPUTER & ACCESSORIES</Link></li>
-                  <li><Link href="#" className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all uppercase">ELECTRONIC & CAMERA</Link></li>
-                  <li><Link href="#" className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all uppercase">FASHION & ACCESSORIES</Link></li>
-                  <li><Link href="#" className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all uppercase">SPORT & FITNESS</Link></li>
-                </>
+                <li className="p-4 text-center text-xs text-gray-400">
+                  No categories found
+                </li>
               )}
             </ul>
           </div>
@@ -150,6 +197,44 @@ export default async function Home() {
                    <p className="text-white text-xl font-bold tracking-widest drop-shadow-md">FOR LESS THAN $99.00</p>
                 </div>
              </div>
+          </div>
+
+          {/* SHOP BY CATEGORY */}
+          <div className="bg-white border border-[#e5e5e5] p-5 shadow-xs">
+            <div className="flex items-center justify-between border-b border-[#e5e5e5] pb-3 mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-5 bg-[#e34444]" />
+                <h3 className="font-bold text-[#333333] text-[14px] md:text-[15px] uppercase tracking-wide">
+                  Shop By Category
+                </h3>
+              </div>
+              <Link
+                href="/categories"
+                className="text-[12px] font-bold text-[#e34444] hover:underline flex items-center gap-1"
+              >
+                View All ({categories.length}) <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+              {categories.map((cat) => {
+                const IconComponent = getCategoryIcon(cat.name);
+                return (
+                  <Link
+                    key={cat.id}
+                    href={`/products?category=${encodeURIComponent(cat.name)}`}
+                    className="flex flex-col items-center justify-center p-3 rounded-none border border-[#f0f0f0] bg-[#fafafa] hover:bg-white hover:border-[#e34444] hover:shadow-sm transition-all group text-center"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-white group-hover:bg-[#e34444]/10 border border-[#e5e5e5] flex items-center justify-center text-[#555555] group-hover:text-[#e34444] transition-colors mb-2">
+                      <IconComponent className="w-5 h-5" />
+                    </div>
+                    <span className="text-[12px] font-medium text-[#333333] group-hover:text-[#e34444] transition-colors line-clamp-1">
+                      {cat.name.replace(/-/g, " ")}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
 
           {/* HOT DEALS */}
@@ -231,12 +316,18 @@ export default async function Home() {
                 ELECTRONICS
                 <div className="absolute top-0 -right-[12px] w-0 h-0 border-t-[18px] border-t-transparent border-b-[18px] border-b-transparent border-l-[12px] border-l-[#e34444] z-10"></div>
               </div>
-              <div className="flex-1 flex justify-end gap-6 text-[12px] text-[#666666] px-4 items-center overflow-x-auto hidden md:flex">
-                <span className="hover:text-[#e34444] cursor-pointer">Accessories</span>
-                <span className="hover:text-[#e34444] cursor-pointer">Book & Magazine</span>
-                <span className="hover:text-[#e34444] cursor-pointer">Gift</span>
-                <span className="hover:text-[#e34444] cursor-pointer">Screen Protectors</span>
-                <span className="hover:text-[#e34444] cursor-pointer">Sony</span>
+              <div className="flex-1 flex justify-end gap-4 text-[12px] text-[#666666] px-4 items-center overflow-x-auto hidden md:flex">
+                {categories
+                  .filter((c) => ["Laptops", "Smartphones", "Tablets", "Mobile-Accessories"].includes(c.name))
+                  .map((c) => (
+                    <Link
+                      key={c.id}
+                      href={`/products?category=${encodeURIComponent(c.name)}`}
+                      className="hover:text-[#e34444] transition-colors whitespace-nowrap"
+                    >
+                      {c.name.replace(/-/g, " ")}
+                    </Link>
+                  ))}
               </div>
             </div>
 

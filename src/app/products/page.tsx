@@ -1,20 +1,34 @@
 import { fetchFromAPI } from "@/lib/api";
-import { Item } from "@/lib/types";
+import { Item, Category } from "@/lib/types";
 import { toAbsoluteUrl } from "@/lib/media";
-import { Card, CardContent } from "@/components/ui/card";
-import { ShoppingBag, Search, SlidersHorizontal } from "lucide-react";
+import { ShoppingBag, SlidersHorizontal, X } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 export const revalidate = 60; // ISR
 
-export default async function ProductsPage() {
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ category?: string }>;
+}) {
+  const params = searchParams ? await searchParams : {};
+  const categoryParam = params?.category;
+
   let products: Item[] = [];
+  let categories: Category[] = [];
 
   try {
-    const productsRes = await fetchFromAPI("/shop/items/");
+    const endpoint = categoryParam
+      ? `/shop/items/?category=${encodeURIComponent(categoryParam)}`
+      : "/shop/items/";
+
+    const [productsRes, categoriesRes] = await Promise.all([
+      fetchFromAPI(endpoint),
+      fetchFromAPI("/shop/categories/"),
+    ]);
+
     products = productsRes.results || productsRes || [];
+    categories = categoriesRes.results || categoriesRes || [];
   } catch (error) {
     console.error("Failed to fetch products", error);
   }
@@ -23,7 +37,7 @@ export default async function ProductsPage() {
   if (products.length === 0) {
     products = [
       {
-        id: 1, title: "Premium Leather Jacket", slug: "premium-leather-jacket", price: "299.99", discount_price: "249.99", description: "", images: [], item_size: [{ id: 1, size: { id: 1, name: "M" }, stock: 10, price_for_this_size: 0, item: 1 }] as any, item_color: [{ id: 1, color: { id: 1, name: "Black", hex_code: "#000000" }, item: 1 }] as any,
+        id: 1, title: "Premium Leather Jacket", slug: "premium-leather-jacket", price: "299.99", discount_price: "249.99", description: "", images: [], item_size: [{ id: 1, size: { id: 1, name: "M" }, stock: 10 }] as Item["item_size"], item_color: [{ id: 1, color: { id: 1, name: "Black", hex_code: "#000000" } }] as Item["item_color"],
         category: { id: 1, name: "Clothing", slug: "clothing" }
       },
       {
@@ -65,15 +79,34 @@ export default async function ProductsPage() {
         <aside className="w-full md:w-[270px] flex-shrink-0 flex flex-col gap-6">
           {/* CATEGORIES Menu */}
           <div className="bg-white border border-[#e5e5e5]">
-            <div className="bg-[#e34444] text-white font-bold text-[13px] px-4 py-3 flex items-center">
-              CATEGORIES
+            <div className="bg-[#e34444] text-white font-bold text-[13px] px-4 py-3 flex items-center justify-between">
+              <span>CATEGORIES</span>
+              <span className="bg-black/20 text-white text-[11px] px-2 py-0.5 rounded-full font-bold">
+                {categories.length}
+              </span>
             </div>
-            <ul className="text-[13px] text-[#666666] divide-y divide-[#f2f2f2]">
-               <li><Link href="#" className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all uppercase">ALL PRODUCTS</Link></li>
-               <li><Link href="#" className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all uppercase">MOBILE & TABLET</Link></li>
-               <li><Link href="#" className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all uppercase">COMPUTER & ACCESSORIES</Link></li>
-               <li><Link href="#" className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all uppercase">ELECTRONIC & CAMERA</Link></li>
-               <li><Link href="#" className="block px-4 py-3 hover:text-[#e34444] hover:pl-5 transition-all uppercase">FASHION & ACCESSORIES</Link></li>
+            <ul className="text-[13px] text-[#666666] divide-y divide-[#f2f2f2] max-h-[460px] overflow-y-auto">
+              <li>
+                <Link
+                  href="/products"
+                  className={`block px-4 py-2.5 transition-all uppercase ${!categoryParam ? "text-[#e34444] font-bold bg-gray-50 pl-5" : "hover:text-[#e34444] hover:pl-5"}`}
+                >
+                  ALL PRODUCTS
+                </Link>
+              </li>
+              {categories.map((cat) => {
+                const isActive = categoryParam === cat.name;
+                return (
+                  <li key={cat.id}>
+                    <Link
+                      href={`/products?category=${encodeURIComponent(cat.name)}`}
+                      className={`block px-4 py-2.5 transition-all truncate ${isActive ? "text-[#e34444] font-bold bg-gray-50 pl-5" : "hover:text-[#e34444] hover:pl-5"}`}
+                    >
+                      {cat.name.replace(/-/g, " ")}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
@@ -96,7 +129,25 @@ export default async function ProductsPage() {
 
         {/* Right Main Content (3/4 width) */}
         <div className="flex-1 flex flex-col gap-6">
-          
+
+          {categoryParam && (
+            <div className="bg-white border border-[#e5e5e5] p-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-[13px] text-[#666666]">Filtered by:</span>
+                <span className="bg-[#e34444]/10 text-[#e34444] font-bold text-[13px] px-3 py-1 rounded-sm flex items-center gap-1.5">
+                  {categoryParam.replace(/-/g, " ")}
+                  <Link href="/products" className="hover:text-black">
+                    <X className="w-3.5 h-3.5" />
+                  </Link>
+                </span>
+                <span className="text-[12px] text-[#999999]">({products.length} items)</span>
+              </div>
+              <Link href="/products" className="text-[12px] text-[#666666] hover:text-[#e34444] hover:underline font-medium">
+                Clear filter
+              </Link>
+            </div>
+          )}
+
           <div className="bg-white border border-[#e5e5e5] p-3 flex flex-wrap justify-between items-center text-[13px] text-[#666666]">
              <div className="flex items-center gap-2">
                 <span className="font-bold text-[#333333]">View:</span>

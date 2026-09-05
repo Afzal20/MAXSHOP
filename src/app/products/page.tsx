@@ -9,18 +9,31 @@ export const revalidate = 60; // ISR
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ category?: string }>;
+  searchParams?: Promise<{
+    category?: string;
+    search?: string;
+    min_price?: string;
+    max_price?: string;
+  }>;
 }) {
   const params = searchParams ? await searchParams : {};
   const categoryParam = params?.category;
+  const searchParam = params?.search;
+  const minPriceParam = params?.min_price;
+  const maxPriceParam = params?.max_price;
 
   let products: Item[] = [];
   let categories: Category[] = [];
 
   try {
-    const endpoint = categoryParam
-      ? `/shop/items/?category=${encodeURIComponent(categoryParam)}`
-      : "/shop/items/";
+    const query = new URLSearchParams();
+    if (categoryParam) query.set("category", categoryParam);
+    if (searchParam) query.set("search", searchParam);
+    if (minPriceParam) query.set("min_price", minPriceParam);
+    if (maxPriceParam) query.set("max_price", maxPriceParam);
+
+    const queryString = query.toString();
+    const endpoint = queryString ? `/shop/items/?${queryString}` : "/shop/items/";
 
     const [productsRes, categoriesRes] = await Promise.all([
       fetchFromAPI(endpoint),
@@ -130,20 +143,36 @@ export default async function ProductsPage({
         {/* Right Main Content (3/4 width) */}
         <div className="flex-1 flex flex-col gap-6">
 
-          {categoryParam && (
-            <div className="bg-white border border-[#e5e5e5] p-4 flex items-center justify-between">
-              <div className="flex items-center gap-2">
+          {(categoryParam || searchParam) && (
+            <div className="bg-white border border-[#e5e5e5] p-4 flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-[13px] text-[#666666]">Filtered by:</span>
-                <span className="bg-[#e34444]/10 text-[#e34444] font-bold text-[13px] px-3 py-1 rounded-sm flex items-center gap-1.5">
-                  {categoryParam.replace(/-/g, " ")}
-                  <Link href="/products" className="hover:text-black">
-                    <X className="w-3.5 h-3.5" />
-                  </Link>
-                </span>
+                {categoryParam && (
+                  <span className="bg-[#e34444]/10 text-[#e34444] font-bold text-[13px] px-3 py-1 rounded-sm flex items-center gap-1.5">
+                    Category: {categoryParam.replace(/-/g, " ")}
+                    <Link
+                      href={searchParam ? `/products?search=${encodeURIComponent(searchParam)}` : "/products"}
+                      className="hover:text-black"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </Link>
+                  </span>
+                )}
+                {searchParam && (
+                  <span className="bg-[#e34444]/10 text-[#e34444] font-bold text-[13px] px-3 py-1 rounded-sm flex items-center gap-1.5">
+                    Search: "{searchParam}"
+                    <Link
+                      href={categoryParam ? `/products?category=${encodeURIComponent(categoryParam)}` : "/products"}
+                      className="hover:text-black"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </Link>
+                  </span>
+                )}
                 <span className="text-[12px] text-[#999999]">({products.length} items)</span>
               </div>
               <Link href="/products" className="text-[12px] text-[#666666] hover:text-[#e34444] hover:underline font-medium">
-                Clear filter
+                Clear all filters
               </Link>
             </div>
           )}

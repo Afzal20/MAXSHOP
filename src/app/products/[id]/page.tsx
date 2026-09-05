@@ -57,7 +57,12 @@ export default async function ProductPage({ params, searchParams }: Props) {
       </div>
 
       <main className="container mx-auto px-4 pt-6">
-        <div className="bg-white border border-[#e5e5e5]">
+        <div
+          className="bg-white border border-[#e5e5e5]"
+          data-product-id={product.id}
+          data-product-title={product.title}
+          data-product-price={product.discount_price || product.price}
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
             {/* Image Gallery - Left Side */}
             <div className="p-6 md:p-8 border-b md:border-b-0 md:border-r border-[#e5e5e5]">

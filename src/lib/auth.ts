@@ -25,17 +25,25 @@ export async function getRefreshToken() {
 }
 
 export async function setAuthCookies(accessToken: string, refreshToken: string) {
-  const store = await cookies();
-  store.set(ACCESS_COOKIE, accessToken, { ...cookieOptions, maxAge: ACCESS_MAX_AGE });
-  if (refreshToken) {
-    store.set(REFRESH_COOKIE, refreshToken, { ...cookieOptions, maxAge: REFRESH_MAX_AGE });
+  try {
+    const store = await cookies();
+    store.set(ACCESS_COOKIE, accessToken, { ...cookieOptions, maxAge: ACCESS_MAX_AGE });
+    if (refreshToken) {
+      store.set(REFRESH_COOKIE, refreshToken, { ...cookieOptions, maxAge: REFRESH_MAX_AGE });
+    }
+  } catch {
+    // Cookies can only be modified in Route Handlers or Server Actions in Next.js.
   }
 }
 
 export async function clearAuthCookies() {
-  const store = await cookies();
-  store.delete(ACCESS_COOKIE);
-  store.delete(REFRESH_COOKIE);
+  try {
+    const store = await cookies();
+    store.delete(ACCESS_COOKIE);
+    store.delete(REFRESH_COOKIE);
+  } catch {
+    // Cookies can only be modified in Route Handlers or Server Actions in Next.js.
+  }
 }
 
 /**

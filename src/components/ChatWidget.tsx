@@ -61,6 +61,17 @@ function parseActions(text: string): { cleanText: string; rawActions: Array<{ ty
     })
     .replace(EMOJI_REGEX, "")
     .trim();
+
+  // Robust fallback: if model text clearly says it is heading to checkout but forgot the tag
+  if (
+    !rawActions.some((a) => a.type === "NAVIGATE") &&
+    /(?:heading to checkout|take you to checkout|taking you to checkout|navigate to checkout|navigating to checkout|go to checkout)/i.test(
+      cleanText
+    )
+  ) {
+    rawActions.push({ type: "NAVIGATE", payload: "/checkout" });
+  }
+
   return { cleanText, rawActions };
 }
 
@@ -217,6 +228,13 @@ export function ChatWidget() {
       if (actionType === "NAVIGATE") {
         const targetPath = action.payload.startsWith("/") ? action.payload : `/${action.payload}`;
         router.push(targetPath);
+        if (typeof window !== "undefined") {
+          setTimeout(() => {
+            if (window.location.pathname !== targetPath.split("?")[0]) {
+              window.location.href = targetPath;
+            }
+          }, 300);
+        }
         return {
           type: "NAVIGATE",
           payload: targetPath,
@@ -382,6 +400,8 @@ export function ChatWidget() {
       const ws = socketRef.current;
       if (!text || isStreaming || !ws || ws.readyState !== WebSocket.OPEN) return;
 
+      executedActionsRef.current.clear();
+
       const lowerText = text.toLowerCase();
       const localActions: ChatAction[] = [];
 
@@ -397,12 +417,21 @@ export function ChatWidget() {
         const res = await executeAction({ type: "THEME", payload: "light" });
         localActions.push(res);
       } else if (
-        lowerText === "checkout" ||
-        lowerText.includes("go to checkout") ||
-        lowerText.includes("make checkout") ||
-        lowerText.includes("proceed to checkout")
+        lowerText.includes("checkout") ||
+        lowerText.includes("check out") ||
+        lowerText.includes("place order") ||
+        lowerText.includes("buy now")
       ) {
-        const res = await executeAction({ type: "NAVIGATE", payload: "/checkout" });
+        let target = "/checkout";
+        const queryParams = new URLSearchParams();
+        const nameMatch = text.match(/name\s*(?:is|:|=)?\s*([a-zA-Z]+)/i);
+        if (nameMatch) queryParams.set("first_name", nameMatch[1]);
+        const cityMatch = text.match(/(?:from|in|city)\s*([a-zA-Z]+)/i);
+        if (cityMatch) queryParams.set("city", cityMatch[1]);
+        if (queryParams.toString()) {
+          target = `/checkout?${queryParams.toString()}`;
+        }
+        const res = await executeAction({ type: "NAVIGATE", payload: target });
         localActions.push(res);
       } else if (
         (lowerText.includes("add to cart") || lowerText.includes("add current product")) &&

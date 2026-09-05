@@ -26,6 +26,20 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     fetchCart();
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const firstName = params.get("first_name") || params.get("name") || "";
+      const city = params.get("city") || "";
+      const address = params.get("address") || "";
+      if (firstName || city || address) {
+        setFormData((prev) => ({
+          ...prev,
+          ...(firstName ? { first_name: firstName } : {}),
+          ...(city ? { city } : {}),
+          ...(address ? { address } : {}),
+        }));
+      }
+    }
   }, []);
 
   const fetchCart = async () => {

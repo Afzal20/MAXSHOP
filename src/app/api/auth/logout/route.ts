@@ -1,16 +1,25 @@
 import { NextResponse } from "next/server";
-import { API_URL, clearAuthCookies, getRefreshToken } from "@/lib/auth";
+import { API_URL, clearAuthCookies, getAccessToken, getRefreshToken } from "@/lib/auth";
 
 export async function POST() {
   try {
-    // Tell DRF to blacklist the refresh token if configured
+    // Tell DRF to blacklist the refresh token
     const refreshToken = await getRefreshToken();
+    const accessToken = await getAccessToken();
 
     if (refreshToken) {
+      const cookieHeader = [
+        `refresh_token=${refreshToken}`,
+        accessToken ? `access_token=${accessToken}` : "",
+      ]
+        .filter(Boolean)
+        .join("; ");
+
       await fetch(`${API_URL}/accounts/logout/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Cookie: cookieHeader,
         },
         body: JSON.stringify({ refresh: refreshToken }),
       });

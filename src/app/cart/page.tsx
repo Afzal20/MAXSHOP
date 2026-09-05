@@ -123,7 +123,10 @@ export default function CartPage() {
 
                 return (
                   <div key={item.id} className="bg-white p-4 border border-[#e5e5e5] flex flex-col sm:flex-row gap-6 items-center sm:items-start relative">
-                    <div className="w-24 h-24 bg-[#f5f5f5] flex-shrink-0 overflow-hidden border border-[#e5e5e5]">
+                    <Link
+                      href={`/products/${product.id}`}
+                      className="w-24 h-24 bg-[#f5f5f5] flex-shrink-0 overflow-hidden border border-[#e5e5e5] block hover:opacity-90 transition-opacity"
+                    >
                       {product.images && product.images.length > 0 ? (
                         <img
                           src={toAbsoluteUrl(
@@ -136,7 +139,7 @@ export default function CartPage() {
                       ) : (
                         <div className="w-full h-full bg-[#f5f5f5]" />
                       )}
-                    </div>
+                    </Link>
 
                     <div className="flex-grow flex flex-col justify-between h-full w-full">
                       <div className="flex justify-between items-start w-full">

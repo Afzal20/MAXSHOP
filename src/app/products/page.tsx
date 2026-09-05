@@ -174,7 +174,11 @@ export default async function ProductsPage({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 bg-white border-t border-l border-[#e5e5e5]">
             {products.map((product) => (
-              <div key={product.id} className="p-4 flex flex-col items-center relative group border-b border-r border-[#e5e5e5]">
+              <Link
+                key={product.id}
+                href={`/products/${product.id}`}
+                className="p-4 flex flex-col items-center relative group border-b border-r border-[#e5e5e5] cursor-pointer block hover:bg-gray-50/50 transition-colors"
+              >
                 {product.discount_price && <div className="absolute top-2 left-2 bg-[#f27420] text-white text-[10px] font-bold px-2 py-0.5 rounded-sm z-10">SALE</div>}
                 
                 <div className="w-full aspect-square relative mb-4 flex items-center justify-center p-2">
@@ -186,14 +190,14 @@ export default async function ProductsPage({
                 </div>
                 
                 <div className="flex text-yellow-400 text-[11px] mb-2">★★★★★</div>
-                <Link href={`/products/${product.id}`} className="text-[13px] text-[#333333] hover:text-[#e34444] text-center line-clamp-1 mb-2 font-medium transition-colors">
+                <h4 className="text-[13px] text-[#333333] group-hover:text-[#e34444] text-center line-clamp-1 mb-2 font-medium transition-colors">
                   {product.title}
-                </Link>
+                </h4>
                 <div className="flex items-center gap-2">
                   {product.discount_price && <span className="text-[12px] text-[#999999] line-through">${product.price}</span>}
                   <span className="text-[16px] font-bold text-[#e34444]">${product.discount_price || product.price}</span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 

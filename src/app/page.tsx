@@ -1,6 +1,7 @@
 import { fetchFromAPI } from "@/lib/api";
-import { Item, Category } from "@/lib/types";
+import { Item, Category, NewArrivalBanner } from "@/lib/types";
 import { toAbsoluteUrl } from "@/lib/media";
+import { NewArrivalsBanner } from "@/components/NewArrivalsBanner";
 import {
   ArrowRight,
   ShoppingBag,
@@ -118,17 +119,20 @@ export default async function Home() {
   let categories: Category[] = [];
   let featuredProducts: Item[] = [];
   let bestsellingProducts: Item[] = [];
+  let newArrivalsBanner: NewArrivalBanner | null = null;
 
   try {
-    const [productsRes, categoriesRes, featuredRes, bestsellingRes] = await Promise.all([
+    const [productsRes, categoriesRes, featuredRes, bestsellingRes, bannerRes] = await Promise.all([
       fetchFromAPI("/shop/items/").catch(() => []),
       fetchFromAPI("/shop/categories/").catch(() => []),
       fetchFromAPI("/shop/items/?is_featured=true").catch(() => []),
       fetchFromAPI("/shop/items/?is_bestselling=true").catch(() => []),
+      fetchFromAPI<NewArrivalBanner>("/shop/new-arrivals-banner/").catch(() => null),
     ]);
 
     products = productsRes?.results || productsRes || [];
     categories = categoriesRes?.results || categoriesRes || [];
+    newArrivalsBanner = bannerRes || null;
 
     const fetchedFeatured = featuredRes?.results || featuredRes || [];
     featuredProducts =
@@ -466,23 +470,7 @@ export default async function Home() {
           </section>
 
           {/* NEW ARRIVALS BANNER */}
-          <div className="bg-[#e34444] flex flex-col md:flex-row text-white border-b-4 border-[#cc3a3a]">
-            <div className="p-4 md:p-6 flex-1 flex flex-col justify-center">
-              <h3 className="text-2xl md:text-3xl font-black mb-1">NEW ARRIVALS</h3>
-              <p className="text-[13px] opacity-90">Curabitur luctus ipsum eget convallis</p>
-            </div>
-            <div className="bg-[#cc3a3a] p-4 flex items-center justify-center gap-4">
-              <div className="text-center">
-                <span className="text-4xl font-black block leading-none">50%</span>
-                <span className="text-[11px] font-bold tracking-widest">OFF</span>
-              </div>
-              <div className="text-[11px] font-bold leading-tight border-l border-white/20 pl-4">
-                ON ALL<br/>PRODUCTS
-              </div>
-            </div>
-            <div className="flex-1 bg-[url('https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?q=80&w=2027&auto=format&fit=crop')] bg-cover bg-center hidden md:block opacity-60">
-            </div>
-          </div>
+          <NewArrivalsBanner banner={newArrivalsBanner} />
 
           {/* BEST SELLING PRODUCTS (ALL IS_BESTSELLING) */}
           <section id="bestselling-products" className="bg-white border border-[#e5e5e5]">

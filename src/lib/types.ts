@@ -67,3 +67,25 @@ export interface User {
   last_name: string;
   phone_number?: string;
 }
+
+export interface NewArrivalBannerImage {
+  id: number;
+  image_name: string;
+  image?: string | null;
+  image_url?: string | null;
+  final_image_url?: string | null;
+  link_url?: string;
+  order?: number;
+  is_active?: boolean;
+}
+
+export interface NewArrivalBanner {
+  id?: number;
+  title: string;
+  subtitle?: string;
+  discount_percent?: string;
+  discount_text?: string;
+  is_active?: boolean;
+  images: NewArrivalBannerImage[];
+}
+

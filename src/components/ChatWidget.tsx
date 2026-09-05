@@ -50,6 +50,7 @@ function toWebSocketUrl(apiUrl: string): string {
 }
 
 const ACTION_REGEX = /\[\[ACTION:([A-Z_]+):([^\]]+)\]\]/g;
+const EMOJI_REGEX = /[\p{Extended_Pictographic}\u{1F300}-\u{1F5FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu;
 
 function parseActions(text: string): { cleanText: string; rawActions: Array<{ type: string; payload: string }> } {
   const rawActions: Array<{ type: string; payload: string }> = [];
@@ -58,6 +59,7 @@ function parseActions(text: string): { cleanText: string; rawActions: Array<{ ty
       rawActions.push({ type: type.trim(), payload: payload.trim() });
       return "";
     })
+    .replace(EMOJI_REGEX, "")
     .trim();
   return { cleanText, rawActions };
 }

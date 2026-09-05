@@ -12,9 +12,9 @@ export async function fetchFromAPI(endpoint: string, options: RequestInit = {}) 
   };
 
   const response = await fetch(url, {
+    cache: options.cache ?? "no-store",
     ...options,
     headers,
-    cache: "no-store",
   });
 
   if (!response.ok) {

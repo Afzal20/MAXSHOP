@@ -3,8 +3,15 @@
 import Link from "next/link";
 import { ShoppingCart, Search, Phone, ChevronDown, User, Lock, LogOut } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import { SiteSetting } from "@/lib/types";
 
-export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
+export function Navbar({
+  isLoggedIn,
+  siteSettings,
+}: {
+  isLoggedIn?: boolean;
+  siteSettings?: SiteSetting | null;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-otp"];
@@ -12,6 +19,12 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
   if (authRoutes.includes(pathname)) {
     return null;
   }
+
+  const hotlineLabel = siteSettings?.hotline_label || "HOTLINE:";
+  const hotlineNumber = siteSettings?.hotline_number || "(801) 2345 - 6789";
+  const announcementBadge = siteSettings?.announcement_badge || "This Week";
+  const announcementText = siteSettings?.announcement_text || "Maecenas faucibus mollis";
+  const telHref = `tel:${hotlineNumber.replace(/[^0-9+]/g, "")}`;
 
   const handleLogout = async () => {
     try {
@@ -31,8 +44,12 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
       <div className="bg-[#f5f5f5] border-b border-[#e5e5e5] text-[13px] text-[#666666]">
         <div className="container mx-auto px-4 flex justify-between items-center h-10">
           <div className="flex items-center">
-            <span className="bg-[#f27420] text-white px-2 py-0.5 rounded-sm font-bold text-[11px] mr-2">This Week</span>
-            <span>Maecenas faucibus mollis</span>
+            {announcementBadge && (
+              <span className="bg-[#f27420] text-white px-2 py-0.5 rounded-sm font-bold text-[11px] mr-2">
+                {announcementBadge}
+              </span>
+            )}
+            {announcementText && <span>{announcementText}</span>}
           </div>
           <div className="flex items-center divide-x divide-[#e5e5e5]">
             {isLoggedIn ? (
@@ -85,12 +102,23 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
         {/* Hotline Right */}
         <div className="flex-1 flex justify-end items-center">
           <div className="flex items-center text-right">
-            <div className="bg-[#e34444] text-white p-2.5 rounded-full mr-3">
+            <a
+              href={telHref}
+              className="bg-[#e34444] hover:bg-[#cc3a3a] text-white p-2.5 rounded-full mr-3 transition-colors cursor-pointer"
+              title={`Call ${hotlineNumber}`}
+            >
               <Phone className="w-5 h-5" />
-            </div>
+            </a>
             <div>
-              <p className="text-[11px] font-bold text-gray-500 tracking-wider">HOTLINE:</p>
-              <p className="text-[#333333] font-bold text-lg leading-tight">(801) 2345 - 6789</p>
+              <p className="text-[11px] font-bold text-gray-500 tracking-wider uppercase">
+                {hotlineLabel}
+              </p>
+              <a
+                href={telHref}
+                className="text-[#333333] hover:text-[#e34444] font-bold text-lg leading-tight transition-colors cursor-pointer"
+              >
+                {hotlineNumber}
+              </a>
             </div>
           </div>
         </div>

@@ -89,3 +89,14 @@ export interface NewArrivalBanner {
   images: NewArrivalBannerImage[];
 }
 
+export interface SiteSetting {
+  id?: number;
+  site_name?: string;
+  hotline_label: string;
+  hotline_number: string;
+  announcement_badge?: string;
+  announcement_text?: string;
+  is_active?: boolean;
+}
+
+

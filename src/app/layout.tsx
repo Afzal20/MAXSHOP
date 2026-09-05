@@ -21,9 +21,14 @@ export const metadata: Metadata = {
 import { Providers } from "@/components/Providers";
 import { ChatWidget } from "@/components/ChatWidget";
 import { cookies } from "next/headers";
+import { fetchFromAPI } from "@/lib/api";
+import { SiteSetting } from "@/lib/types";
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies();
+  const [cookieStore, siteSettings] = await Promise.all([
+    cookies(),
+    fetchFromAPI<SiteSetting>("/shop/site-settings/").catch(() => null),
+  ]);
   const isLoggedIn = cookieStore.has("access_token") || cookieStore.has("refresh_token");
 
   return (
@@ -49,7 +54,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-200">
         <Providers>
-          <Navbar isLoggedIn={isLoggedIn} />
+          <Navbar isLoggedIn={isLoggedIn} siteSettings={siteSettings} />
           {children}
           <ChatWidget />
         </Providers>

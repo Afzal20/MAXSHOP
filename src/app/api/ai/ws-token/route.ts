@@ -49,13 +49,24 @@ export async function GET() {
   } else {
     // If access token is present, check expiry
     const expiry = getTokenExpiry(accessToken);
-    const aboutToExpire = expiry === null || expiry * 1000 - Date.now() < 30_000;
+    const isExpired = expiry !== null && expiry * 1000 <= Date.now();
+    const aboutToExpire = isExpired || (expiry !== null && expiry * 1000 - Date.now() < 30_000);
     if (aboutToExpire && (await getRefreshToken())) {
       const refreshed = await refreshAuthTokens();
       if (refreshed) {
         await setAuthCookies(refreshed.access, refreshed.refresh);
         accessToken = refreshed.access;
+      } else if (isExpired) {
+        return NextResponse.json(
+          { error: "Session expired. Please sign in again." },
+          { status: 401 }
+        );
       }
+    } else if (isExpired) {
+      return NextResponse.json(
+        { error: "Session expired. Please sign in again." },
+        { status: 401 }
+      );
     }
   }
 

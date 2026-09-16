@@ -46,7 +46,8 @@ type SocketFrame =
 type ConnState = "idle" | "connecting" | "open" | "unauthenticated" | "error";
 
 function toWebSocketUrl(apiUrl: string): string {
-  return apiUrl.replace(/^http/, "ws") + "/ws/ai/chat/";
+  const wsUrl = apiUrl.replace(/^http/, "ws").replace(/\/+$/, "");
+  return `${wsUrl}/ws/ai/chat/`;
 }
 
 const ACTION_REGEX = /\[\[ACTION:([A-Z_]+):([^\]]+)\]\]/g;
@@ -90,6 +91,7 @@ export function ChatWidget() {
   const streamingTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const executedActionsRef = useRef<Set<string>>(new Set());
+  const isConnectingRef = useRef(false);
 
   const scrollToBottom = useCallback(() => {
     requestAnimationFrame(() => {
@@ -254,8 +256,10 @@ export function ChatWidget() {
   );
 
   const connect = useCallback(async () => {
+    if (isConnectingRef.current) return;
     if (socketRef.current && socketRef.current.readyState <= WebSocket.OPEN) return;
 
+    isConnectingRef.current = true;
     setConnState("connecting");
     try {
       const res = await fetch("/api/ai/ws-token");
@@ -374,9 +378,13 @@ export function ChatWidget() {
         }
       };
 
-      ws.onclose = () => {
+      ws.onclose = (event) => {
         setIsStreaming(false);
-        setConnState((state) => (state === "unauthenticated" ? state : "error"));
+        if (event.code === 4401) {
+          setConnState("unauthenticated");
+        } else {
+          setConnState((state) => (state === "unauthenticated" ? state : "error"));
+        }
       };
 
       ws.onerror = () => {
@@ -384,6 +392,8 @@ export function ChatWidget() {
       };
     } catch {
       setConnState("error");
+    } finally {
+      isConnectingRef.current = false;
     }
   }, [executeAction, scrollToBottom]);
 
@@ -455,7 +465,7 @@ export function ChatWidget() {
       scrollToBottom();
 
       const currentProd = getCurrentProductContext();
-      const contextPayload: Record<string, any> = {
+      const contextPayload: Record<string, unknown> = {
         current_page: pathname,
       };
       if (currentProd) {
@@ -485,10 +495,13 @@ export function ChatWidget() {
   }, []);
 
   useEffect(() => {
-    if (isOpen && (connState === "unauthenticated" || connState === "error" || connState === "idle")) {
-      void connect();
+    if (HIDDEN_ROUTES.includes(pathname)) {
+      if (socketRef.current) {
+        socketRef.current.close();
+        socketRef.current = null;
+      }
     }
-  }, [pathname, isOpen, connState, connect]);
+  }, [pathname]);
 
   if (HIDDEN_ROUTES.includes(pathname)) return null;
 
@@ -567,6 +580,7 @@ export function ChatWidget() {
                 <div className="flex items-center justify-center gap-2">
                   <Link
                     href="/login"
+                    onClick={() => setIsOpen(false)}
                     className="inline-block bg-[#e34444] text-white text-sm font-bold px-5 py-2 rounded-full hover:bg-[#cc3a3a] transition-colors"
                   >
                     Sign in

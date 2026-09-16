@@ -51,6 +51,7 @@ export async function GET() {
     const expiry = getTokenExpiry(accessToken);
     const isExpired = expiry !== null && expiry * 1000 <= Date.now();
     const aboutToExpire = isExpired || (expiry !== null && expiry * 1000 - Date.now() < 30_000);
+
     if (aboutToExpire && (await getRefreshToken())) {
       const refreshed = await refreshAuthTokens();
       if (refreshed) {

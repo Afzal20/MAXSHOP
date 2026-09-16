@@ -190,7 +190,7 @@ export function ChatWidget() {
               description: `Product #${itemId} added to cart`,
             };
           } else {
-            const errData = await res.json().catch(() => ({}));
+            const errData = await res.json().catch(() => ({})) as Record<string, string>;
             return {
               type: "ADD_TO_CART",
               payload: String(itemId),
@@ -488,12 +488,14 @@ export function ChatWidget() {
     void sendQuery(input);
   }, [input, sendQuery]);
 
+  // Cleanup socket on unmount
   useEffect(() => {
     return () => {
       socketRef.current?.close();
     };
   }, []);
 
+  // Close socket when navigating to hidden routes (auth pages)
   useEffect(() => {
     if (HIDDEN_ROUTES.includes(pathname)) {
       if (socketRef.current) {
